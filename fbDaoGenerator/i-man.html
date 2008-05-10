@@ -1,0 +1,96 @@
+
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+	<!--<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1' />-->
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	<title>Firebird Database Info</title>
+	<meta http-equiv='expires' content='0' />
+	<meta http-equiv='cache-control' content='no-cache' />
+	<style type='text/css'>
+	body,p,th,td,li,span,h1,h2,h3,h4,h5,h6,form,input,select,textarea,pre {
+		font-family:Verdana,Arial,sans-serif;
+		color:#000;
+		font-weight:normal;
+		font-style:normal;
+		text-decoration:none;
+		vertical-align:middle;
+	}
+	p,a,th,td,li,span,form,input,select,textarea,pre {
+		font-size:11px;
+	}
+	table {
+		border:1px solid #000;
+		border-collapse:collapse;
+	}
+	th {
+		font-weight:bold;
+		background-color:#ddd;
+		border: 1px solid #000;
+		padding:3px;
+	}
+	td {
+		border:1px solid #000;
+		padding:3px;
+	}
+	a.tabletitle {
+		font-size:120%;
+		text-decoration:none;
+		color:#000;
+	}
+	</style>
+</head>
+<body>
+<h1>Database Info</h1>
+<table>
+<tr><th>Database Server</th><td>viking</td></tr><tr><th>Local database alias</th><td>localhost:i-man</td></tr><tr><th>Filename</th><td>/home/firebird/i-man.fdb</td></tr><tr><th>Page created</th><td>Sat Mar 22 11:45:13 2008</td></tr></table>
+<h1>Tables in Database</h1>
+<table id='all_tables'>
+<tr><th>Name</th><th>Owner</th><th>Description</th></tr>
+<tr><td><a href='#IMAN_ATTACHMENTS'>IMAN_ATTACHMENTS</a></td><td>SYSDBA</td><td>None</td></tr>
+<tr><td><a href='#IMAN_CATEGORIES'>IMAN_CATEGORIES</a></td><td>SYSDBA</td><td>None</td></tr>
+<tr><td><a href='#IMAN_CONTENT'>IMAN_CONTENT</a></td><td>SYSDBA</td><td>None</td></tr>
+<tr><td><a href='#IMAN_USERS'>IMAN_USERS</a></td><td>SYSDBA</td><td>None</td></tr>
+</table>
+<h1>Tables Detail</h1>
+<h4>IMAN_ATTACHMENTS</h4>
+<table id='IMAN_ATTACHMENTS'>
+<tr><th>Column</th><th>Type</th><th>Length</th><th>Default</th><th>NULL</th><th>Description</th></tr>
+<tr><td>ATTACHED_RECORD</td><td>LONG</td><td>None</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>FILENAME</td><td>VARYING</td><td>128</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>DESCRIPTION</td><td>VARYING</td><td>128</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>MIMETYPE</td><td>VARYING</td><td>128</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>FILESIZE</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>DATE_SAVED</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><th colspan='6'>Primary Key</th></tr><tr><td colspan='6'>ATTACHED_RECORD, FILENAME (INTEG_7)</td></tr></table>
+<h4>IMAN_CATEGORIES</h4>
+<table id='IMAN_CATEGORIES'>
+<tr><th>Column</th><th>Type</th><th>Length</th><th>Default</th><th>NULL</th><th>Description</th></tr>
+<tr><td>ID</td><td>LONG</td><td>None</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>NAME</td><td>VARYING</td><td>50</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>DESCRIPTION</td><td>VARYING</td><td>50</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><th colspan='6'>Primary Key</th></tr><tr><td colspan='6'>ID (INTEG_4)</td></tr></table>
+<h4>IMAN_CONTENT</h4>
+<table id='IMAN_CONTENT'>
+<tr><th>Column</th><th>Type</th><th>Length</th><th>Default</th><th>NULL</th><th>Description</th></tr>
+<tr><td>ID</td><td>LONG</td><td>None</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>CATEGORY</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>TITLE</td><td>VARYING</td><td>80</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>CONTENT</td><td>BLOB</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>DATE_MODIFIED</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>HOST_MODIFIED</td><td>VARYING</td><td>8</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>HIDDEN</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><th colspan='6'>Primary Key</th></tr><tr><td colspan='6'>ID (INTEG_2)</td></tr></table>
+<h4>IMAN_USERS</h4>
+<table id='IMAN_USERS'>
+<tr><th>Column</th><th>Type</th><th>Length</th><th>Default</th><th>NULL</th><th>Description</th></tr>
+<tr><td>ID</td><td>LONG</td><td>None</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>USERNAME</td><td>VARYING</td><td>32</td><td>None</td><td>No</td><td>None</td></tr>
+<tr><td>PW</td><td>VARYING</td><td>32</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>REALNAME</td><td>VARYING</td><td>40</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>EMAIL</td><td>VARYING</td><td>60</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>LAST_PW_CHANGE</td><td>LONG</td><td>None</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><td>PERMISSIONS</td><td>VARYING</td><td>24</td><td>None</td><td>Yes</td><td>None</td></tr>
+<tr><th colspan='6'>Primary Key</th></tr><tr><td colspan='6'>ID (INTEG_9)</td></tr></table>
+</body>
+</html>
