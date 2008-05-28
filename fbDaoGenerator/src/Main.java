@@ -114,7 +114,7 @@ public class Main {
 			daoImpFile.println("\tprivate Connection conn = null;");
 			daoImpFile.println();
 			daoImpFile.println("\tpublic "+tableJavaName+"DAOFirebird() {");
-			daoImpFile.println("\t\ttry {");
+/*			daoImpFile.println("\t\ttry {");
 			daoImpFile.println("\t\t\tClass.forName(\"org.firebirdsql.jdbc.FBDriver\");");
 			daoImpFile.println("\t\t} catch (ClassNotFoundException e1) {");
 			daoImpFile.println("\t\t\te1.printStackTrace();");
@@ -127,7 +127,7 @@ public class Main {
 			daoImpFile.println("\t\t\tthis.conn = DriverManager.getConnection(\"jdbc:firebirdsql:"+config.getConfigFileParameter("user_dbalias")+"\", connInfo);");
 			daoImpFile.println("\t\t} catch (SQLException e2) {");
 			daoImpFile.println("\t\t\te2.printStackTrace();");
-			daoImpFile.println("\t\t}");
+			daoImpFile.println("\t\t}");*/
 			daoImpFile.println("\t}");
 			daoImpFile.println();
 
