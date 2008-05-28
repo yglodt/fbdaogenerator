@@ -14,8 +14,8 @@ public class DataFieldFirebird {
 	private boolean isInPK = false;
 	
 	public DataFieldFirebird(String name, String type, int length, int notNull) {
-		typeMapping.put("SHORT", "int");
-		typeMapping.put("LONG", "int");
+		typeMapping.put("SHORT", "Integer");
+		typeMapping.put("LONG", "Integer");
 		typeMapping.put("DOUBLE", "double");
 		typeMapping.put("VARYING", "String");
 		typeMapping.put("TEXT", "String");
