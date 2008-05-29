@@ -12,7 +12,7 @@ public class DataFieldFirebird {
 	private int length;
 	private int notNull;
 	private boolean isInPK = false;
-	
+
 	public DataFieldFirebird(String name, String type, int length, int notNull) {
 		typeMapping.put("SHORT", "Integer");
 		typeMapping.put("LONG", "Integer");
