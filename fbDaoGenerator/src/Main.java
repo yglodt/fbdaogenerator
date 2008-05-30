@@ -326,7 +326,7 @@ public class Main {
 
 		//sun.tools.javac.Main c= new sun.tools.javac.Main(out, "javac"); 
 		String s = null;
-    	String compilerCommandline = config.getConfigFileParameter("javaCompiler")+" -d "+config.getConfigFileParameter("outputdir")+" -classpath "+config.getConfigFileParameter("outputdir")+" -sourcepath "+config.getConfigFileParameter("outputdir") + " @"+config.getConfigFileParameter("outputdir")+File.separator+"sourceFileList.txt";
+    	String compilerCommandline = config.getConfigFileParameter("javaCompiler")+" -target "+config.getConfigFileParameter("targetVm")+" -d "+config.getConfigFileParameter("outputdir")+" -classpath "+config.getConfigFileParameter("outputdir")+" -sourcepath "+config.getConfigFileParameter("outputdir") + " @"+config.getConfigFileParameter("outputdir")+File.separator+"sourceFileList.txt";
     	System.out.println("Compiling the generated code: "+compilerCommandline);
         try {
             Process compilerProcess = Runtime.getRuntime().exec(compilerCommandline, (String[]) sourceFilesToCompile.toArray(new String[sourceFilesToCompile.size()]));
@@ -349,7 +349,7 @@ public class Main {
 		// create the package
 		// with help from: http://www.exampledepot.com/egs/java.util.zip/CreateZip.html
 		String[] filenames = new File(outPutDir+File.separator+config.getConfigFileParameter("package").replace(".", "/")+File.separator).list();
-        String outFilename = config.getConfigFileParameter("outputdir")+File.separator+"package.jar";
+        String outFilename = config.getConfigFileParameter("outputdir")+File.separator+config.getConfigFileParameter("package_filename");
         System.out.println("Creating java package: "+outFilename);
         ZipOutputStream out = null;
 		byte[] buf = new byte[1024];
