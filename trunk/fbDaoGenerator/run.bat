@@ -11,4 +11,3 @@ java -classpath .;..\lib\jaybird-full-2.1.3.jar Main
 cd ..
 
 pause
-

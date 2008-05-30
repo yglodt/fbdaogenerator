@@ -109,11 +109,14 @@ public class Main {
 			daoImpFile.println("import java.util.ArrayList;");
 			daoImpFile.println("import java.util.Properties;");
 			daoImpFile.println("import java.util.Date;");
+
 			daoImpFile.println();
 			daoImpFile.println("public class "+tableJavaName+"DAOFirebird implements "+tableJavaName+"DAO {");
 			daoImpFile.println("\tprivate Connection conn = null;");
 			daoImpFile.println();
-			daoImpFile.println("\tpublic "+tableJavaName+"DAOFirebird() {");
+			daoImpFile.println("\tpublic "+tableJavaName+"DAOFirebird(Connection conn) {");
+//			this.conn = daoconfig.DaoConfig.getConnection();
+			daoImpFile.println("\t\tthis.conn = conn;");
 /*			daoImpFile.println("\t\ttry {");
 			daoImpFile.println("\t\t\tClass.forName(\"org.firebirdsql.jdbc.FBDriver\");");
 			daoImpFile.println("\t\t} catch (ClassNotFoundException e1) {");
@@ -209,6 +212,32 @@ public class Main {
 			daoImpFile.println("\t}");
 			daoImpFile.println();
 
+			// getAll() method
+			daoImpFile.println("\tpublic "+tableJavaName+"[] getAll(String clause) {");
+			daoImpFile.println("\t\tArrayList<"+tableJavaName+"> list = new ArrayList<"+tableJavaName+">();");
+			daoImpFile.println("\t\tResultSet rst = null;");
+			daoImpFile.println("\t\tPreparedStatement pstmt = null;");
+			daoImpFile.println("\t\tString sql = \"select * from "+table+" \" + clause;");
+			daoImpFile.println("\t\ttry {");
+			daoImpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
+			daoImpFile.println("\t\t\trst = pstmt.executeQuery();");
+			daoImpFile.println("\t\t\twhile(rst.next()) {");
+			daoImpFile.println("\t\t\t\t"+tableJavaName+" record = new "+tableJavaName+"();");
+			columnCount = 1;
+			for (DataFieldFirebird column: columnList) {
+				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst.get"+column.getJavaType().substring(0,1).toUpperCase() + column.getJavaType().substring(1)+"("+columnCount+"));");
+				columnCount++;
+			}
+			daoImpFile.println("\t\t\t\tlist.add(record);");
+			daoImpFile.println("\t\t\t}");
+			daoImpFile.println("\t\t} catch (SQLException e) {");
+			daoImpFile.println("\t\t\te.printStackTrace();");
+			daoImpFile.println("\t\t}");
+			daoImpFile.println("\t\treturn list.toArray(new "+tableJavaName+"[0]);");
+			daoImpFile.println("\t}");
+			daoImpFile.println();
+
+			
 			// insert() method
 			daoImpFile.println("\tpublic void insert("+tableJavaName+" record) {");
 			daoImpFile.println("\t\tPreparedStatement pstmt = null;");

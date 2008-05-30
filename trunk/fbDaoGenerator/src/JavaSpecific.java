@@ -29,7 +29,7 @@ public class JavaSpecific {
 			javaType = "Timestamp";
 			cast = "(java.sql.Timestamp) ";
 		} else if (javaType.equals("Integer")) {
-			return "setInt("+position+", "+cast+javaName+");";
+//			return "setInt("+position+", "+cast+javaName+");";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
 		}
