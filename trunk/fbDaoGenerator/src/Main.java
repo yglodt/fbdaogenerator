@@ -109,28 +109,12 @@ public class Main {
 			daoImpFile.println("import java.util.ArrayList;");
 			daoImpFile.println("import java.util.Properties;");
 			daoImpFile.println("import java.util.Date;");
-
 			daoImpFile.println();
 			daoImpFile.println("public class "+tableJavaName+"DAOFirebird implements "+tableJavaName+"DAO {");
 			daoImpFile.println("\tprivate Connection conn = null;");
 			daoImpFile.println();
 			daoImpFile.println("\tpublic "+tableJavaName+"DAOFirebird(Connection conn) {");
-//			this.conn = daoconfig.DaoConfig.getConnection();
 			daoImpFile.println("\t\tthis.conn = conn;");
-/*			daoImpFile.println("\t\ttry {");
-			daoImpFile.println("\t\t\tClass.forName(\"org.firebirdsql.jdbc.FBDriver\");");
-			daoImpFile.println("\t\t} catch (ClassNotFoundException e1) {");
-			daoImpFile.println("\t\t\te1.printStackTrace();");
-			daoImpFile.println("\t\t}");
-			daoImpFile.println("\t\ttry {");
-			daoImpFile.println("\t\t\tProperties connInfo = new Properties();");
-			daoImpFile.println("\t\t\tconnInfo.put(\"user\", \""+config.getConfigFileParameter("user_dbuser")+"\");");
-			daoImpFile.println("\t\t\tconnInfo.put(\"password\", \""+config.getConfigFileParameter("user_dbpass")+"\");");
-			daoImpFile.println("\t\t\tconnInfo.put(\"charSet\", \""+config.getConfigFileParameter("user_dbcharset")+"\");");
-			daoImpFile.println("\t\t\tthis.conn = DriverManager.getConnection(\"jdbc:firebirdsql:"+config.getConfigFileParameter("user_dbalias")+"\", connInfo);");
-			daoImpFile.println("\t\t} catch (SQLException e2) {");
-			daoImpFile.println("\t\t\te2.printStackTrace();");
-			daoImpFile.println("\t\t}");*/
 			daoImpFile.println("\t}");
 			daoImpFile.println();
 
@@ -212,7 +196,7 @@ public class Main {
 			daoImpFile.println("\t}");
 			daoImpFile.println();
 
-			// getAll() method
+			// getAll(String clause) method
 			daoImpFile.println("\tpublic "+tableJavaName+"[] getAll(String clause) {");
 			daoImpFile.println("\t\tArrayList<"+tableJavaName+"> list = new ArrayList<"+tableJavaName+">();");
 			daoImpFile.println("\t\tResultSet rst = null;");
