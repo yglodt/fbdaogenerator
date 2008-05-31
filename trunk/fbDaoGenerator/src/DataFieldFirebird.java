@@ -14,9 +14,14 @@ public class DataFieldFirebird {
 	private boolean isInPK = false;
 
 	public DataFieldFirebird(String name, String type, int length, int notNull) {
+		// HashMap which makes the link between data types of Firebird and Java
 		typeMapping.put("SHORT", "int");
-		typeMapping.put("LONG", "int");
+		typeMapping.put("INT", "int");
+		typeMapping.put("INTEGER", "int");
+		typeMapping.put("INT64", "int");
+		typeMapping.put("LONG", "int"); //bbbbbbbbbb
 		typeMapping.put("DOUBLE", "double");
+		typeMapping.put("FLOAT", "float");
 		typeMapping.put("VARYING", "String");
 		typeMapping.put("TEXT", "String");
 		typeMapping.put("BLOB", "String");
