@@ -18,12 +18,14 @@ public class Main {
 	public static void main(String[] args) {
 
 		ArrayList<String> tableList = DataBase.getTableList();
-		String outPutDir = config.getConfigFileParameter("outputdir");
-		new File(outPutDir).mkdirs();
+		// TODO: delete dir before starting at all
+		String outPutDir = config.getConfigFileParameter("outputdir");		
+	    new File(outPutDir).mkdirs();
 		outPutDir = outPutDir + File.separator;
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
 //		String[] sourceFilesToCompile = {};
 		//int sourceFileCounter = 0;
+		String schemaVersion = DataBase.getSchemaVersion();
 
 		for (String table : tableList) {
 			System.out.println("Generating java code for table: "+table);
@@ -349,7 +351,7 @@ public class Main {
 		// create the package
 		// with help from: http://www.exampledepot.com/egs/java.util.zip/CreateZip.html
 		String[] filenames = new File(outPutDir+File.separator+config.getConfigFileParameter("package").replace(".", "/")+File.separator).list();
-        String outFilename = config.getConfigFileParameter("outputdir")+File.separator+config.getConfigFileParameter("package_filename");
+        String outFilename = config.getConfigFileParameter("package_filename").replace("$V", "-"+schemaVersion);
         System.out.println("Creating java package: "+outFilename);
         ZipOutputStream out = null;
 		byte[] buf = new byte[1024];

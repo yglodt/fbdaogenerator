@@ -20,4 +20,21 @@ public class DataBase {
 		}
 		return tableList;
 	}
+
+	public static String getSchemaVersion() {
+		String version = null;
+		String sql = config.getConfigFileParameter("SchemaVersionSQL");
+		if ((sql != null) && (sql != "")) {
+			try {
+				PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);
+				ResultSet rst = pstmt.executeQuery();
+				while(rst.next()) {
+					version = rst.getString(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return version;
+	}
 }
