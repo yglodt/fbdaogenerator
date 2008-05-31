@@ -15,11 +15,37 @@ import java.util.zip.ZipOutputStream;
 public class Main {
 	static Configuration config =  new Configuration();
 
+	public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // The directory is now empty so delete it
+        return dir.delete();
+	}
+	
 	public static void main(String[] args) {
 
 		ArrayList<String> tableList = DataBase.getTableList();
 		// TODO: delete dir before starting at all
 		String outPutDir = config.getConfigFileParameter("outputdir");		
+	    Main.deleteDir(new File(outPutDir));
+
+	    /*
+	     * http://exampledepot.com/egs/java.io/DeleteDir.html 
+	     * http://forum.java.sun.com/thread.jspa?threadID=563148&messageID=3415560
+	     * http://forum.java.sun.com/thread.jspa?threadID=5180140&messageID=9700001
+	     * http://www.bytemycode.com/snippets/snippet/188/
+	     * http://java.sun.com/j2se/1.4.2/docs/api/java/io/FilePermission.html
+	     * http://snippets.dzone.com/tag/directory/2
+	     * http://www.dreamincode.net/code/snippet1444.htm
+	     */
+
 	    new File(outPutDir).mkdirs();
 		outPutDir = outPutDir + File.separator;
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
