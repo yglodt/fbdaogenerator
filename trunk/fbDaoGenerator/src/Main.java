@@ -31,6 +31,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 
+		for (String s: args) {
+            System.out.println("Arg: "+s);
+        }
+
 		ArrayList<String> tableList = DataBase.getTableList();
 		// TODO: delete dir before starting at all
 		String outPutDir = config.getConfigFileParameter("outputdir");		
@@ -204,7 +208,15 @@ public class Main {
 			daoImpFile.println("\t\tArrayList<"+tableJavaName+"> list = new ArrayList<"+tableJavaName+">();");
 			daoImpFile.println("\t\tResultSet rst = null;");
 			daoImpFile.println("\t\tPreparedStatement pstmt = null;");
-			daoImpFile.println("\t\tString sql = \"select * from "+table+"\";");
+			
+			// make list of colums to fetch
+			String selectValues = "";
+			for (DataFieldFirebird column: columnList) {
+				selectValues = selectValues + column.getName() + " = ?, ";
+			}
+			selectValues = selectValues.substring(0, (selectValues.length()-2));
+			
+			daoImpFile.println("\t\tString sql = \"select "+selectValues+" from "+table+"\";");
 			daoImpFile.println("\t\ttry {");
 			daoImpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
 			daoImpFile.println("\t\t\trst = pstmt.executeQuery();");

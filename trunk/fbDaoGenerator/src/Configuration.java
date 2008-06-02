@@ -12,6 +12,7 @@ class Configuration {
 			this.configFile.load(new FileInputStream(new File("fbdaogenerator.ini")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			System.out.println("Configuration-file not found.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
