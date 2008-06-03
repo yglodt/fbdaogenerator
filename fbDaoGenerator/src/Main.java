@@ -161,11 +161,18 @@ public class Main {
 			if (!getterParams.equals("")) {
 				getterParams = getterParams.substring(0, (getterParams.length()-2));
 			}
+			// make list of colums to fetch, instead of "select *"
+			String selectColumns = "";
+			for (DataFieldFirebird column: columnList) {
+				selectColumns = selectColumns + column.getName() + ",";
+			}
+			selectColumns = selectColumns.substring(0, (selectColumns.length()-1));
+			//System.out.println(selectValues);
 			daoImpFile.print(getterParams);
 			daoImpFile.println(") {");
 			daoImpFile.println("\t\tResultSet rst = null;");
 			daoImpFile.println("\t\tPreparedStatement pstmt = null;");
-			daoImpFile.println("\t\tString sql = \"select * from "+table+" where \"+");
+			daoImpFile.println("\t\tString sql = \"select "+selectColumns+" from "+table+" where \"+");
 			// build the "where" clause for the primary key. Caution: this clause is also used in the update() and delete() methods!
 			String whereClause = "";
 			for (DataFieldFirebird column: columnList) {
@@ -207,16 +214,8 @@ public class Main {
 			daoImpFile.println("\tpublic "+tableJavaName+"[] getAll() {");
 			daoImpFile.println("\t\tArrayList<"+tableJavaName+"> list = new ArrayList<"+tableJavaName+">();");
 			daoImpFile.println("\t\tResultSet rst = null;");
-			daoImpFile.println("\t\tPreparedStatement pstmt = null;");
-			
-			// make list of colums to fetch
-			String selectValues = "";
-			for (DataFieldFirebird column: columnList) {
-				selectValues = selectValues + column.getName() + " = ?, ";
-			}
-			selectValues = selectValues.substring(0, (selectValues.length()-2));
-			
-			daoImpFile.println("\t\tString sql = \"select "+selectValues+" from "+table+"\";");
+			daoImpFile.println("\t\tPreparedStatement pstmt = null;");			
+			daoImpFile.println("\t\tString sql = \"select "+selectColumns+" from "+table+"\";");
 			daoImpFile.println("\t\ttry {");
 			daoImpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
 			daoImpFile.println("\t\t\trst = pstmt.executeQuery();");
@@ -241,7 +240,7 @@ public class Main {
 			daoImpFile.println("\t\tArrayList<"+tableJavaName+"> list = new ArrayList<"+tableJavaName+">();");
 			daoImpFile.println("\t\tResultSet rst = null;");
 			daoImpFile.println("\t\tPreparedStatement pstmt = null;");
-			daoImpFile.println("\t\tString sql = \"select * from "+table+" \" + clause;");
+			daoImpFile.println("\t\tString sql = \"select "+selectColumns+" from "+table+" \" + clause;");
 			daoImpFile.println("\t\ttry {");
 			daoImpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
 			daoImpFile.println("\t\t\trst = pstmt.executeQuery();");
