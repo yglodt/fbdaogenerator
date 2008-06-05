@@ -40,16 +40,6 @@ public class Main {
 		String outPutDir = config.getConfigFileParameter("outputdir");		
 	    Main.deleteDir(new File(outPutDir));
 
-	    /*
-	     * http://exampledepot.com/egs/java.io/DeleteDir.html 
-	     * http://forum.java.sun.com/thread.jspa?threadID=563148&messageID=3415560
-	     * http://forum.java.sun.com/thread.jspa?threadID=5180140&messageID=9700001
-	     * http://www.bytemycode.com/snippets/snippet/188/
-	     * http://java.sun.com/j2se/1.4.2/docs/api/java/io/FilePermission.html
-	     * http://snippets.dzone.com/tag/directory/2
-	     * http://www.dreamincode.net/code/snippet1444.htm
-	     */
-
 	    new File(outPutDir).mkdirs();
 		outPutDir = outPutDir + File.separator;
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
@@ -58,7 +48,7 @@ public class Main {
 		String schemaVersion = DataBase.getSchemaVersion();
 
 		for (String table : tableList) {
-			System.out.println("Generating java code for table: "+table);
+			System.out.println("Generating Java code for table: "+table);
 			ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
 			PrintStream classFile;
 			PrintStream daoFile;
@@ -124,6 +114,8 @@ public class Main {
 			daoFile.println(");");
 			daoFile.println();
 			daoFile.println("\tpublic "+tableJavaName+"[] getAll();");
+			daoFile.println();
+			daoFile.println("\tpublic "+tableJavaName+"[] getAll(String clause);");
 			daoFile.println();
 			daoFile.println("\tpublic void insert("+tableJavaName+" record);");
 			daoFile.println();
@@ -191,7 +183,6 @@ public class Main {
 			for (DataFieldFirebird column: columnList) {
 				if (column.isInPK()) {
 					daoImpFile.println("\t\t\tpstmt."+JavaSpecific.createPreparedStatementSetter(column.getJavaType(), paramCount, column.getJavaName()));
-//					daoImpFile.println("\t\t\tpstmt.set"+column.getJavaType().substring(0,1).toUpperCase() + column.getJavaType().substring(1)+"("+paramCount+", "+column.getJavaName()+");");
 					paramCount++;
 				}
 			}
@@ -199,7 +190,7 @@ public class Main {
 			daoImpFile.println("\t\t\twhile(rst.next()) {");
 			int columnCount = 1;
 			for (DataFieldFirebird column: columnList) {
-				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst.get"+column.getJavaType().substring(0,1).toUpperCase() + column.getJavaType().substring(1)+"("+columnCount+"));");
+				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst."+JavaSpecific.createResultSetGetter(column.getJavaType(), columnCount)+");");
 				columnCount++;
 			}
 			daoImpFile.println("\t\t\t}");
@@ -223,7 +214,7 @@ public class Main {
 			daoImpFile.println("\t\t\t\t"+tableJavaName+" record = new "+tableJavaName+"();");
 			columnCount = 1;
 			for (DataFieldFirebird column: columnList) {
-				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst.get"+column.getJavaType().substring(0,1).toUpperCase() + column.getJavaType().substring(1)+"("+columnCount+"));");
+				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst."+JavaSpecific.createResultSetGetter(column.getJavaType(), columnCount)+");");
 				columnCount++;
 			}
 			daoImpFile.println("\t\t\t\tlist.add(record);");
@@ -248,7 +239,7 @@ public class Main {
 			daoImpFile.println("\t\t\t\t"+tableJavaName+" record = new "+tableJavaName+"();");
 			columnCount = 1;
 			for (DataFieldFirebird column: columnList) {
-				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst.get"+column.getJavaType().substring(0,1).toUpperCase() + column.getJavaType().substring(1)+"("+columnCount+"));");
+				daoImpFile.println("\t\t\t\trecord.set"+column.getJavaName().substring(0,1).toUpperCase() + column.getJavaName().substring(1)+"(rst."+JavaSpecific.createResultSetGetter(column.getJavaType(), columnCount)+");");
 				columnCount++;
 			}
 			daoImpFile.println("\t\t\t\tlist.add(record);");

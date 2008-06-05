@@ -15,11 +15,11 @@ public class DataFieldFirebird {
 
 	public DataFieldFirebird(String name, String type, int length, int notNull) {
 		// HashMap which makes the link between data types of Firebird and Java
-		typeMapping.put("SHORT", "int");
-		typeMapping.put("INT", "int");
-		typeMapping.put("INTEGER", "int");
-		typeMapping.put("INT64", "int");
-		typeMapping.put("LONG", "int"); //bbbbbbbbbb
+		typeMapping.put("SHORT", "Integer");
+		typeMapping.put("INT", "Integer");
+		typeMapping.put("INTEGER", "Integer");
+		typeMapping.put("INT64", "Integer");
+		typeMapping.put("LONG", "Integer");
 		typeMapping.put("DOUBLE", "double");
 		typeMapping.put("FLOAT", "float");
 		typeMapping.put("VARYING", "String");
