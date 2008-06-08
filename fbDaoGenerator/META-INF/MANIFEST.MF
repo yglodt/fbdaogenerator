@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: . dep/batik.jar dep/avalon.jar dep/forms.jar
