@@ -32,6 +32,9 @@ public class JarBuilder {
 		
 		Project p = new Project();
 		
+		File binDir = this.srcDir;
+//		binDir.deleteOnExit()
+
 		Target compileTarget = new Target();
 		compileTarget.setName("compile");
 		Javac compileTask = new Javac();
@@ -39,19 +42,21 @@ public class JarBuilder {
 		Path outputPath = new Path(p);
 		outputPath.setLocation(this.srcDir);
 		compileTask.setSrcdir(outputPath);
-		compileTask.setDestdir(this.srcDir);
+		compileTask.setDestdir(binDir); // change to new folder, which should not include .java files (in case you do not want to package source)
+		compileTask.setTarget("1.5");
 		compileTarget.addTask(compileTask);
 		p.addTarget(compileTarget);
-		
+
 		Jar jarTask = new Jar();
 		jarTask.setProject(p);
-		jarTask.setBasedir(this.srcDir);
+		jarTask.setBasedir(binDir); // place where .class files have to be
 		jarTask.setDestFile(this.destJar);
 		
 		Target jarTarget = new Target();
 		jarTarget.setName("jar");
 		jarTarget.addDependency("compile");
 		jarTarget.addTask(jarTask);
+//		jarTarget.
 		p.addTarget(jarTarget);
 		
 		p.executeTarget("jar");		
