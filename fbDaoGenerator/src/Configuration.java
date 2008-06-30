@@ -16,7 +16,23 @@ class Configuration {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.conn = this.connect();
+	}
 
+	public Connection getDbConnection() {
+		if (this.conn != null) {
+			return this.conn;
+		} else {
+			return this.connect();
+		}
+	}
+
+	public String getConfigFileParameter(String key) {
+		return this.configFile.getProperty(key);
+	}
+	
+	private Connection connect() {
+		Connection conn = null;
 		try {
 			Class.forName("org.firebirdsql.jdbc.FBDriver");
 		} catch (ClassNotFoundException e1) {
@@ -28,18 +44,10 @@ class Configuration {
 			connInfo.put("user", this.getConfigFileParameter("dbuser"));
 			connInfo.put("password", this.getConfigFileParameter("dbpass"));
 			connInfo.put("charSet", this.getConfigFileParameter("dbcharset"));
-			this.conn = DriverManager.getConnection ("jdbc:firebirdsql:"+this.getConfigFileParameter("dbalias"), connInfo);
+			conn = DriverManager.getConnection ("jdbc:firebirdsql:"+this.getConfigFileParameter("dbalias"), connInfo);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-	}
-
-	public Connection getDbConnection() {
-		// maybe check here if connection is valid, if not, the reconnect
-		return this.conn;
-	}
-
-	public String getConfigFileParameter(String key) {
-		return this.configFile.getProperty(key);
+		return conn;
 	}
 }
