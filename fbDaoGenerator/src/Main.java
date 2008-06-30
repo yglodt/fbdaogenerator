@@ -1,15 +1,8 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class Main {
 	static Configuration config = new Configuration();
@@ -444,69 +437,8 @@ public class Main {
 			daoImpFile.close();
 		}
 
-		JarBuilder jb = new JarBuilder(new File("/tmp/dao"), new File(
-				"/tmp/dao.jar"));
+		JarBuilder jb = new JarBuilder(new File("/tmp/dao"), new File("/tmp/dao.jar"));
 		jb.compileAndBuildJar();
-
-		/*
-		 * File sourceFilesToCompileFile = new
-		 * File(outPutDir+File.separator+"sourceFileList.txt"); FileWriter
-		 * fileWriter = null; try { fileWriter = new
-		 * FileWriter(sourceFilesToCompileFile); } catch (IOException e1) {
-		 * e1.printStackTrace(); } for (int i = 0; i <
-		 * sourceFilesToCompile.size(); i++) { try {
-		 * fileWriter.write(sourceFilesToCompile.get(i) + "\n"); } catch
-		 * (IOException e) { e.printStackTrace(); } } try { fileWriter.close(); }
-		 * catch (IOException e1) { e1.printStackTrace(); }
-		 * 
-		 * //sun.tools.javac.Main c= new sun.tools.javac.Main(out, "javac");
-		 * String s = null; String compilerCommandline =
-		 * config.getConfigFileParameter("javaCompiler")+" -target
-		 * "+config.getConfigFileParameter("targetVm")+" -d
-		 * "+config.getConfigFileParameter("outputdir")+" -classpath
-		 * "+config.getConfigFileParameter("outputdir")+" -sourcepath
-		 * "+config.getConfigFileParameter("outputdir") + "
-		 * @"+config.getConfigFileParameter("outputdir")+File.separator+"sourceFileList.txt";
-		 * System.out.println("Compiling the generated code:
-		 * "+compilerCommandline); try { Process compilerProcess =
-		 * Runtime.getRuntime().exec(compilerCommandline, (String[])
-		 * sourceFilesToCompile.toArray(new
-		 * String[sourceFilesToCompile.size()])); BufferedReader stdInput = new
-		 * BufferedReader(new
-		 * InputStreamReader(compilerProcess.getInputStream())); BufferedReader
-		 * stdError = new BufferedReader(new
-		 * InputStreamReader(compilerProcess.getErrorStream()));
-		 * 
-		 * while ((s = stdInput.readLine()) != null) { System.out.println(s); }
-		 * 
-		 * while ((s = stdError.readLine()) != null) { System.out.println(s); } }
-		 * catch (IOException e) { e.printStackTrace(); System.exit(-1); }
-		 *  // create the package // with help from:
-		 * http://www.exampledepot.com/egs/java.util.zip/CreateZip.html String[]
-		 * filenames = new
-		 * File(outPutDir+File.separator+config.getConfigFileParameter("package").replace(".",
-		 * "/")+File.separator).list(); String outFilename =
-		 * config.getConfigFileParameter("package_filename").replace("$V",
-		 * "-"+schemaVersion); System.out.println("Creating java package:
-		 * "+outFilename); ZipOutputStream out = null; byte[] buf = new
-		 * byte[1024];
-		 * 
-		 * try { out = new ZipOutputStream(new FileOutputStream(outFilename));
-		 * for (int i=0; i<filenames.length; i++) { // this sucker will
-		 * silently die if you feed him dirt FileInputStream in = new
-		 * FileInputStream(config.getConfigFileParameter("outputdir")+File.separator+config.getConfigFileParameter("package").replace(".",
-		 * "/")+File.separator+filenames[i]);
-		 * 
-		 * System.out.println("Adding class to package:
-		 * "+config.getConfigFileParameter("package").replace(".",
-		 * "/")+File.separator+filenames[i]); out.putNextEntry(new
-		 * ZipEntry(config.getConfigFileParameter("package").replace(".",
-		 * "/")+File.separator+filenames[i]));
-		 * 
-		 * int len; while ((len = in.read(buf)) > 0) { out.write(buf, 0, len); }
-		 * out.closeEntry(); in.close(); } System.out.println("Closing the
-		 * package."); out.close(); } catch (IOException e) { }
-		 */
 	}
 
 	public static String underscoreSeparatedToCamelCase(String name) {
