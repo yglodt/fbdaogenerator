@@ -8,8 +8,8 @@ public class Test {
 		SimpleTableDAOFirebird dao = new SimpleTableDAOFirebird(config.getDbConnection());
 		
 		SimpleTable t = new SimpleTable();
-		t.setId(4);
-		t.setStr01("string2");
+		t.setId(9);
+		t.setStr01("string "+t.getId());
 		t.setTestint01(11);
 		dao.insert(t);
 	}
