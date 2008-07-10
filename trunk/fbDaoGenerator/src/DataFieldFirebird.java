@@ -113,4 +113,12 @@ public class DataFieldFirebird {
 	public String getJavaSetter() {
 		return " set"+this.getJavaName().substring(0,1).toUpperCase() + this.getJavaName().substring(1)+"("+this.getJavaType()+" "+this.getJavaName()+")";
 	}
+
+	public String getPHPGetter() {
+		return " get"+this.getJavaName().substring(0,1).toUpperCase() + this.getJavaName().substring(1)+"()";
+	}
+
+	public String getPHPSetter() {
+		return " set"+this.getJavaName().substring(0,1).toUpperCase() + this.getJavaName().substring(1)+"($"+this.getJavaName()+")";
+	}
 }
