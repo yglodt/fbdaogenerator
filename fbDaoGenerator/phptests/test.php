@@ -1,9 +1,14 @@
 <pre>
 <style type='text/css'>
 * {
-  font-size:10px;
+	font-size: 10px;
 }
 </style>
+<script type='text/javascript'>
+
+//window.alert("test");
+
+</script>
 <?php
 
 include('ar.php');
@@ -23,22 +28,22 @@ $dao->update($test);
 $dao->commit();
 
 /*
-$more = $dao->getAllWithClause("where id > 5");
-print_r($more);
-*/
+ $more = $dao->getAllWithClause("where id > 5");
+ print_r($more);
+ */
 /*
-$t = new SimpleTable();
-$t->setId(8);
-$dao->delete($t);
+ $t = new SimpleTable();
+ $t->setId(8);
+ $dao->delete($t);
 
 
-$test = new SimpleTable($dbh);
-$test->getByPK(9);
+ $test = new SimpleTable($dbh);
+ $test->getByPK(9);
 
 
-//$more = $test->getAllWithClause("where id > 6");
-//print_r($more);
+ //$more = $test->getAllWithClause("where id > 6");
+ //print_r($more);
 
-$test->delete();
-*/
+ $test->delete();
+ */
 ?>

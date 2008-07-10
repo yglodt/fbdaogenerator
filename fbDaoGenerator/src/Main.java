@@ -18,8 +18,14 @@ public class Main {
 		// String[] sourceFilesToCompile = {};
 		// int sourceFileCounter = 0;
 
+		final Configuration config = new Configuration();
+		int generateJavaCode = Integer.parseInt(config.getConfigFileParameter("generateJavaCode"));
+		int generatePhpCode = Integer.parseInt(config.getConfigFileParameter("generatePhpCode"));
+		
 		for (String table : tableList) {
-			JavaSpecific.generateCode(table);
+			System.out.println(table);
+			if (generateJavaCode == 1) JavaSpecific.generateCode(table);
+			if (generatePhpCode == 1) PhpSpecific.generateCode(table);
 		}
 	}
 }
