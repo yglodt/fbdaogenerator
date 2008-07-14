@@ -114,34 +114,20 @@ public class PhpSpecific {
 		phpFile.println("\t}");		
 		phpFile.println();
 
-		String getterParams = "";
-				
-		// get(PK) method
-		phpFile.print("\tpublic function get(");
-		getterParams = "";
+
+
+		String fieldsList = "";
 		for (DataFieldFirebird column : columnList) {
-			if (column.isInPK()) {
-				getterParams = getterParams + "$"+ column.getJavaName() + ", ";
-			}
+			fieldsList = fieldsList + column.getName() + ",";
 		}
-		if (!getterParams.equals("")) {
-			getterParams = getterParams.substring(0,
-					(getterParams.length() - 2));
-		}
-		// make list of colums to fetch, instead of "select *"
-		String selectColumns = "";
+		fieldsList = fieldsList.substring(0,(fieldsList.length() - 1));
+
+		String insertPlaceHolders = "";
 		for (DataFieldFirebird column : columnList) {
-			selectColumns = selectColumns + column.getName() + ",";
+			insertPlaceHolders = insertPlaceHolders + "?,";
 		}
-		selectColumns = selectColumns.substring(0,
-				(selectColumns.length() - 1));
-		// System.out.println(selectValues);
-		phpFile.print(getterParams);
-		phpFile.println(") {");
-		phpFile.println("\t\t$query = \"select " + selectColumns
-				+ " from " + table + " where ");
-		// build the "where" clause for the primary key. Caution: this
-		// clause is also used in the update() and delete() methods!
+		insertPlaceHolders = insertPlaceHolders.substring(0, (insertPlaceHolders.length() - 1));
+
 		String whereClause = "";
 		for (DataFieldFirebird column : columnList) {
 			if (column.isInPK()) {
@@ -152,9 +138,8 @@ public class PhpSpecific {
 			whereClause = whereClause.substring(0,
 					(whereClause.length() - 5));
 		}
-		phpFile.println("\t\t" + whereClause + "\";");
-		phpFile.print("\t\t$sth = ibase_query($this->getDbh(), $query, ");
-		getterParams = "";
+
+		String getterParams = "";
 		for (DataFieldFirebird column : columnList) {
 			if (column.isInPK()) {
 				getterParams = getterParams + "$"+ column.getJavaName() + ", ";
@@ -164,7 +149,13 @@ public class PhpSpecific {
 			getterParams = getterParams.substring(0,
 					(getterParams.length() - 2));
 		}
-		phpFile.println(getterParams+");");
+
+
+		
+		// get(PK) method
+		phpFile.println("\tpublic function get("+getterParams+") {");
+		phpFile.println("\t\t$query = \"select " + fieldsList+ " from " + table + " where "+whereClause + "\";");
+		phpFile.println("\t\t$sth = ibase_query($this->getDbh(), $query, "+getterParams+");");
 		phpFile.println("\t\t$temp = new "+tableJavaName+"();");
         phpFile.println("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {");
 		int columnCount = 0;
@@ -179,97 +170,66 @@ public class PhpSpecific {
 		phpFile.println("\t\treturn $temp;");
 		phpFile.println("\t}");
 		phpFile.println();
-/*
+
 		// getAll() method
-		phpFile.println("\tpublic " + tableJavaName + "[] getAll() {");
-		phpFile.println("\t\tArrayList<" + tableJavaName
-				+ "> list = new ArrayList<" + tableJavaName + ">();");
-		phpFile.println("\t\tResultSet rst = null;");
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString sql = \"select " + selectColumns
-				+ " from " + table + "\";");
-		phpFile.println("\t\ttry {");
-		phpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
-		phpFile.println("\t\t\trst = pstmt.executeQuery();");
-		phpFile.println("\t\t\twhile(rst.next()) {");
-		phpFile.println("\t\t\t\t" + tableJavaName + " record = new "
-				+ tableJavaName + "();");
-		columnCount = 1;
+		phpFile.println("\tpublic function getAll() {");
+		phpFile.println("\t\t$query = \"select " + fieldsList + " from " + table + "\";");
+		phpFile.println("\t\t$sth = ibase_query($this->getDbh(), $query);");
+		phpFile.println("\t\t$temp = new "+tableJavaName+"();");
+        phpFile.println("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {");
+		columnCount = 0;
 		for (DataFieldFirebird column : columnList) {
-			phpFile.println("\t\t\t\trecord.set"
+			phpFile.println("\t\t\t\t$temp->set"
 					+ column.getJavaName().substring(0, 1).toUpperCase()
 					+ column.getJavaName().substring(1)
-					+ "(rst."
-					+ JavaSpecific.createResultSetGetter(column
-							.getJavaType(), columnCount) + ");");
+					+ "($row["+columnCount+"]);");
 			columnCount++;
 		}
-		phpFile.println("\t\t\t\tlist.add(record);");
-		phpFile.println("\t\t\t}");
-		phpFile.println("\t\t} catch (SQLException e) {");
-		phpFile.println("\t\t\te.printStackTrace();");
-		phpFile.println("\t\t}");
-		phpFile.println("\t\treturn list.toArray(new " + tableJavaName
-				+ "[0]);");
+		phpFile.println("\t\t\t\t$tempArray[] = $temp;");
+        phpFile.println("\t\t}");
+		phpFile.println("\t\treturn $tempArray;");
+		phpFile.println("\t}");
+		phpFile.println();
+		
+		// getAllWithClause($clause) method
+		phpFile.println("\tpublic function getAllWithClause($clause) {");
+		phpFile.println("\t\t$query = \"select " + fieldsList+ " from " + table + " where $clause\";");
+		phpFile.println("\t\t$sth = ibase_query($this->getDbh(), $query);");
+		phpFile.println("\t\t$temp = new "+tableJavaName+"();");
+        phpFile.println("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {");
+		columnCount = 0;
+		for (DataFieldFirebird column : columnList) {
+			phpFile.println("\t\t\t\t$temp->set"
+					+ column.getJavaName().substring(0, 1).toUpperCase()
+					+ column.getJavaName().substring(1)
+					+ "($row["+columnCount+"]);");
+			columnCount++;
+		}
+		phpFile.println("\t\t\t\t$tempArray[] = $temp;");
+        phpFile.println("\t\t}");
+		phpFile.println("\t\treturn $tempArray;");
 		phpFile.println("\t}");
 		phpFile.println();
 
-		// getAll(String clause) method
-		phpFile.println("\tpublic " + tableJavaName
-				+ "[] getAll(String clause) {");
-		phpFile.println("\t\tArrayList<" + tableJavaName
-				+ "> list = new ArrayList<" + tableJavaName + ">();");
-		phpFile.println("\t\tResultSet rst = null;");
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString sql = \"select " + selectColumns
-				+ " from " + table + " \" + clause;");
-		phpFile.println("\t\ttry {");
-		phpFile.println("\t\t\tpstmt = conn.prepareStatement(sql);");
-		phpFile.println("\t\t\trst = pstmt.executeQuery();");
-		phpFile.println("\t\t\twhile(rst.next()) {");
-		phpFile.println("\t\t\t\t" + tableJavaName + " record = new "
-				+ tableJavaName + "();");
-		columnCount = 1;
-		for (DataFieldFirebird column : columnList) {
-			phpFile.println("\t\t\t\trecord.set"
-					+ column.getJavaName().substring(0, 1).toUpperCase()
-					+ column.getJavaName().substring(1)
-					+ "(rst."
-					+ JavaSpecific.createResultSetGetter(column
-							.getJavaType(), columnCount) + ");");
-			columnCount++;
-		}
-		phpFile.println("\t\t\t\tlist.add(record);");
-		phpFile.println("\t\t\t}");
-		phpFile.println("\t\t} catch (SQLException e) {");
-		phpFile.println("\t\t\te.printStackTrace();");
-		phpFile.println("\t\t}");
-		phpFile.println("\t\treturn list.toArray(new " + tableJavaName
-				+ "[0]);");
-		phpFile.println("\t}");
-		phpFile.println();
 
 		// insert() method
-		phpFile.println("\tpublic void insert(" + tableJavaName
-				+ " record) {");
+		phpFile.println("\tfunction insert($o) {");		
+		phpFile.println("\t\t$stmt = 'insert into "+table+" ("+fieldsList+") values ("+insertPlaceHolders+")';");
+		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
+		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.println("\t\treturn $result;");
+		phpFile.println("\t}");
+		phpFile.println();
+
+/*
 		phpFile.println("\t\tPreparedStatement pstmt = null;");
 		phpFile.println("\t\tString stmt = \"insert into " + table
 				+ " \"+");
-		String insertFields = "";
-		String insertPlaceHolders = "";
-		for (DataFieldFirebird column : columnList) {
-			insertFields = insertFields + column.getName() + ", ";
-			insertPlaceHolders = insertPlaceHolders + "?, ";
-		}
-		insertFields = insertFields.substring(0,
-				(insertFields.length() - 2));
-		insertPlaceHolders = insertPlaceHolders.substring(0,
-				(insertPlaceHolders.length() - 2));
 		phpFile.println("\t\t\"(" + insertFields + ") \"+ ");
 		phpFile.println("\t\t\"values (" + insertPlaceHolders + ")\";");
 		phpFile.println("\t\ttry {");
 		phpFile.println("\t\t\tpstmt = conn.prepareStatement(stmt);");
-		paramCount = 1;
+		int paramCount = 1;
 		for (DataFieldFirebird column : columnList) {
 			phpFile.println("\t\t\tpstmt."
 					+ JavaSpecific.createPreparedStatementSetter(column
@@ -285,17 +245,26 @@ public class PhpSpecific {
 		phpFile.println("\t\t}");
 		phpFile.println("\t}");
 		phpFile.println();
-
+		*/
+		
+		
 		// update() method
-		phpFile.println("\tpublic void update(" + tableJavaName
-				+ " record) {");
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString stmt = \"update " + table
-				+ " set \"+");
 		String updateValues = "";
 		for (DataFieldFirebird column : columnList) {
 			updateValues = updateValues + column.getName() + " = ?, ";
 		}
+		updateValues = updateValues.substring(0, (updateValues.length() - 2));
+		phpFile.println("\tfunction update($o) {");
+		phpFile.println("\t\t$stmt = 'update "+table+" set "+updateValues+" where "+whereClause+"';");
+		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
+		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.println("\t\treturn $result;");
+		phpFile.println("\t}");
+		phpFile.println();
+
+/*
+		phpFile.println("\t\tPreparedStatement pstmt = null;");
+		phpFile.println("\t\tString stmt = \"update " + table + " set \"+");
 		phpFile.println("\t\t\""
 				+ updateValues.substring(0, (updateValues.length() - 2))
 				+ " where \"+");
@@ -303,7 +272,7 @@ public class PhpSpecific {
 
 		phpFile.println("\t\ttry {");
 		phpFile.println("\t\t\tpstmt = conn.prepareStatement(stmt);");
-		paramCount = 1;
+		int paramCount = 1;
 		for (DataFieldFirebird column : columnList) {
 			phpFile.println("\t\t\tpstmt."
 					+ JavaSpecific.createPreparedStatementSetter(column
@@ -342,17 +311,19 @@ public class PhpSpecific {
 		phpFile.println("\t\t}");
 		phpFile.println("\t}");
 		phpFile.println();
+		*/
 
 		// delete() method
-		phpFile.println("\tpublic void delete(" + tableJavaName
-				+ " record) {");
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString stmt = \"delete from " + table
-				+ " where \"+");
-		phpFile.println("\t\t\"" + whereClause + "\";");
-		phpFile.println("\t\ttry {");
-		phpFile.println("\t\t\tpstmt = conn.prepareStatement(stmt);");
-		paramCount = 1;
+		phpFile.println("\tfunction delete($o) {");
+		phpFile.println("\t\t$stmt = 'delete from "+table+" where "+whereClause+"';");
+		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
+		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.println("\t\treturn $result;");
+		phpFile.println("\t}");
+		phpFile.println();
+
+		/*
+		int paramCount = 1;
 		for (DataFieldFirebird column : columnList) {
 			if (column.isInPK()) {
 				phpFile
@@ -381,6 +352,16 @@ public class PhpSpecific {
 		phpFile.println("\t\t\te.printStackTrace();");
 		phpFile.println("\t\t}");
 		*/
+
+		phpFile.println("\tpublic function commit() {");
+		phpFile.println("\t\treturn ibase_commit($this->trans);");
+		phpFile.println("\t}");
+
+		phpFile.println();
+
+		phpFile.println("\tpublic function rollback() {");
+		phpFile.println("\t\treturn ibase_rollback($this->trans);");
+		phpFile.println("\t}");
 
 		phpFile.println("}");
 		phpFile.println();
