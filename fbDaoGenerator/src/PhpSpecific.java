@@ -7,22 +7,6 @@ import java.util.Arrays;
 
 
 public class PhpSpecific {
-	public static String replaceKeyWords(String keyword) {
-		String[] reservedNames = {
-		"abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized",
-		"boolean", "do", "if", "private", "this", "break", "double", "implements", "protected", "throw",
-		"byte", "else", "import", "public", "throws", "case", "enum", "instanceof", "return", "transient",
-		"catch", "extends", "int", "short", "try", "char", "final", "interface", "static", "void",
-		"class", "finally", "long", "strictfp", "volatile", "const", "float", "native", "super", "while"				
-		};
-		ArrayList<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(reservedNames));
-		if (list.contains(keyword)) {
-			return keyword.substring(0,1).toUpperCase() + keyword.substring(1);
-		} else {
-			return keyword;		
-		}
-	}
 	
 	public static String createPreparedStatementSetter(String javaType, int position, String javaName) {
 		String cast = "";
@@ -35,17 +19,6 @@ public class PhpSpecific {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
 		}
 		return "set"+javaType+"("+position+", "+cast+javaName+");";
-	}
-	
-	public static String createResultSetGetter(String javaType, int position) {
-		if (javaType.equals("Date")) {
-			javaType = "Timestamp";
-		} else if (javaType.equals("Integer")) {
-			javaType = "Int";
-		} else {
-			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
-		}
-		return "get"+javaType+"("+position+")";
 	}
 
 	public static void generateCode(String table) {
@@ -216,36 +189,25 @@ public class PhpSpecific {
 		phpFile.println("\tfunction insert($o) {");		
 		phpFile.println("\t\t$stmt = 'insert into "+table+" ("+fieldsList+") values ("+insertPlaceHolders+")';");
 		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
-		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.print("\t\t$result = ibase_execute($sth, ");
+		columnCount = 0;
+		String insertValues = "";
+		for (DataFieldFirebird column : columnList) {
+			insertValues = insertValues + "$o->get"
+					+ column.getJavaName().substring(0, 1).toUpperCase()
+					+ column.getJavaName().substring(1)
+					+ "(), ";
+			columnCount++;
+		}
+		if (!insertValues.equals("")) {
+			insertValues = insertValues.substring(0,
+					(insertValues.length() - 2));
+			phpFile.print(insertValues);
+		}
+		phpFile.println(");");
 		phpFile.println("\t\treturn $result;");
 		phpFile.println("\t}");
 		phpFile.println();
-
-/*
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString stmt = \"insert into " + table
-				+ " \"+");
-		phpFile.println("\t\t\"(" + insertFields + ") \"+ ");
-		phpFile.println("\t\t\"values (" + insertPlaceHolders + ")\";");
-		phpFile.println("\t\ttry {");
-		phpFile.println("\t\t\tpstmt = conn.prepareStatement(stmt);");
-		int paramCount = 1;
-		for (DataFieldFirebird column : columnList) {
-			phpFile.println("\t\t\tpstmt."
-					+ JavaSpecific.createPreparedStatementSetter(column
-							.getJavaType(), paramCount, "record.get"
-							+ column.getJavaName().substring(0, 1)
-									.toUpperCase()
-							+ column.getJavaName().substring(1) + "()"));
-			paramCount++;
-		}
-		phpFile.println("\t\t\tint result = pstmt.executeUpdate();");
-		phpFile.println("\t\t} catch (SQLException e) {");
-		phpFile.println("\t\t\te.printStackTrace();");
-		phpFile.println("\t\t}");
-		phpFile.println("\t}");
-		phpFile.println();
-		*/
 		
 		
 		// update() method
@@ -256,102 +218,53 @@ public class PhpSpecific {
 		updateValues = updateValues.substring(0, (updateValues.length() - 2));
 		phpFile.println("\tfunction update($o) {");
 		phpFile.println("\t\t$stmt = 'update "+table+" set "+updateValues+" where "+whereClause+"';");
-		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
-		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.print("\t\t$result = ibase_execute($sth, ");
+		columnCount = 0;
+		insertValues = "";
+		for (DataFieldFirebird column : columnList) {
+			insertValues = insertValues + "$o->get"
+					+ column.getJavaName().substring(0, 1).toUpperCase()
+					+ column.getJavaName().substring(1)
+					+ "(), ";
+			columnCount++;
+		}
+		if (!insertValues.equals("")) {
+			insertValues = insertValues.substring(0,
+					(insertValues.length() - 2));
+			phpFile.print(insertValues);
+		}
+		phpFile.println(");");
 		phpFile.println("\t\treturn $result;");
 		phpFile.println("\t}");
 		phpFile.println();
 
-/*
-		phpFile.println("\t\tPreparedStatement pstmt = null;");
-		phpFile.println("\t\tString stmt = \"update " + table + " set \"+");
-		phpFile.println("\t\t\""
-				+ updateValues.substring(0, (updateValues.length() - 2))
-				+ " where \"+");
-		phpFile.println("\t\t\"" + whereClause + "\";");
-
-		phpFile.println("\t\ttry {");
-		phpFile.println("\t\t\tpstmt = conn.prepareStatement(stmt);");
-		int paramCount = 1;
-		for (DataFieldFirebird column : columnList) {
-			phpFile.println("\t\t\tpstmt."
-					+ JavaSpecific.createPreparedStatementSetter(column
-							.getJavaType(), paramCount, "record.get"
-							+ column.getJavaName().substring(0, 1)
-									.toUpperCase()
-							+ column.getJavaName().substring(1) + "()"));
-			paramCount++;
-		}
-		for (DataFieldFirebird column : columnList) {
-			if (column.isInPK()) {
-				phpFile
-						.println("\t\t\tpstmt."
-								+ JavaSpecific
-										.createPreparedStatementSetter(
-												column.getJavaType(),
-												paramCount,
-												"record.get"
-														+ column
-																.getJavaName()
-																.substring(
-																		0,
-																		1)
-																.toUpperCase()
-														+ column
-																.getJavaName()
-																.substring(
-																		1)
-														+ "()"));
-				paramCount++;
-			}
-		}
-		phpFile.println("\t\t\tint result = pstmt.executeUpdate();");
-		phpFile.println("\t\t} catch (SQLException e) {");
-		phpFile.println("\t\t\te.printStackTrace();");
-		phpFile.println("\t\t}");
-		phpFile.println("\t}");
-		phpFile.println();
-		*/
 
 		// delete() method
 		phpFile.println("\tfunction delete($o) {");
 		phpFile.println("\t\t$stmt = 'delete from "+table+" where "+whereClause+"';");
 		phpFile.println("\t\t$sth = ibase_prepare($this->getDbh(), $stmt);");
-		phpFile.println("\t\t$result = ibase_execute($sth, ...);");
+		phpFile.print("\t\t$result = ibase_execute($sth, ");
+		columnCount = 0;
+		insertValues = "";
+		for (DataFieldFirebird column : columnList) {
+			if (column.isInPK()) {
+				insertValues = insertValues + "$o->get"
+						+ column.getJavaName().substring(0, 1).toUpperCase()
+						+ column.getJavaName().substring(1)
+						+ "(), ";
+			}
+			columnCount++;
+		}
+		if (!insertValues.equals("")) {
+			insertValues = insertValues.substring(0,
+					(insertValues.length() - 2));
+			phpFile.print(insertValues);
+		}
+		phpFile.println(");");
 		phpFile.println("\t\treturn $result;");
 		phpFile.println("\t}");
 		phpFile.println();
 
-		/*
-		int paramCount = 1;
-		for (DataFieldFirebird column : columnList) {
-			if (column.isInPK()) {
-				phpFile
-						.println("\t\t\tpstmt."
-								+ JavaSpecific
-										.createPreparedStatementSetter(
-												column.getJavaType(),
-												paramCount,
-												"record.get"
-														+ column
-																.getJavaName()
-																.substring(
-																		0,
-																		1)
-																.toUpperCase()
-														+ column
-																.getJavaName()
-																.substring(
-																		1)
-														+ "()"));
-				paramCount++;
-			}
-		}
-		phpFile.println("\t\t\tint result = pstmt.executeUpdate();");
-		phpFile.println("\t\t} catch (SQLException e) {");
-		phpFile.println("\t\t\te.printStackTrace();");
-		phpFile.println("\t\t}");
-		*/
 
 		phpFile.println("\tpublic function commit() {");
 		phpFile.println("\t\treturn ibase_commit($this->trans);");
