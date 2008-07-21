@@ -1,6 +1,6 @@
 #summary Shows you how to use the generated PHP code
 
-= Example Table =
+= Example Database Table =
 
 See the following table structure:
 {{{
