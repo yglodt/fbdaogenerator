@@ -195,21 +195,14 @@ public class TableTestDAOFirebird implements TableTestDAO {
 {{{
 // Create a database connection
 Connection conn = null;
-try {
-	Class.forName("org.firebirdsql.jdbc.FBDriver");
-} catch (ClassNotFoundException e1) {
-	e1.printStackTrace();
-}
+Class.forName("org.firebirdsql.jdbc.FBDriver");
 
-try {
-	Properties connInfo = new Properties();
-	connInfo.put("user", "SYSDBA");
-	connInfo.put("password", "masterkey");
-	connInfo.put("charSet", "ISO-8859-1");
-	conn = DriverManager.getConnection ("jdbc:firebirdsql:server:alias", connInfo);
-} catch (SQLException e2) {
-	e2.printStackTrace();
-}
+Properties connInfo = new Properties();
+connInfo.put("user", "SYSDBA");
+connInfo.put("password", "masterkey");
+connInfo.put("charSet", "ISO-8859-1");
+
+conn = DriverManager.getConnection ("jdbc:firebirdsql:server:alias", connInfo);
 
 // Create an instance of the data-access object
 TableTestDAOFirebird dao = new TableTestDAOFirebird(conn);
