@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class JavaSpecific {
-	/**
-	 * @param keyword
-	 * @return
-	 */
+
 	public static String replaceKeyWords(String keyword) {
 		String[] reservedNames = {
 		"abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized",
@@ -55,10 +52,10 @@ public class JavaSpecific {
 		final Configuration config = new Configuration();
 		String outPutDir = config.getConfigFileParameter("javaOutputdir");
 		outPutDir = outPutDir + File.separator + config.getConfigFileParameter("javaPackage").replaceAll("\\.", System.getProperty("file.separator")) + System.getProperty("file.separator");
-		Helpers.deleteDir(new File(outPutDir));
 		new File(outPutDir).mkdirs();
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
 
+		// this has to be moved out of here because it does one SELECT per table
 		String schemaVersion = DataBase.getSchemaVersion();
 
 		System.out.println("Generating Java code for table: " + table);
@@ -69,11 +66,13 @@ public class JavaSpecific {
 		FileOutputStream classFileHandle = null;
 		FileOutputStream daoFileHandle = null;
 		FileOutputStream daoImpFileHandle = null;
+		String classFileBuffer = "";
+		String daoFileBuffer = "";
+		String daoImpFileBuffer = "";
 		String tableJavaName = Helpers.underscoreSeparatedToCamelCase(table);
-		tableJavaName = tableJavaName.substring(0, 1).toUpperCase()
-				+ tableJavaName.substring(1);
-		
-		
+		tableJavaName = tableJavaName.substring(0, 1).toUpperCase() + tableJavaName.substring(1);
+
+
 		try {
 			classFileHandle = new FileOutputStream(outPutDir
 					+ tableJavaName + ".java");

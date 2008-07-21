@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.ArrayList;
 
 public class Main {
 
@@ -8,6 +7,8 @@ public class Main {
 		final Configuration config = new Configuration();
 		Helpers.deleteDir(new File(config.getConfigFileParameter("javaOutputdir")));
 		Helpers.deleteDir(new File(config.getConfigFileParameter("phpOutputdir")));
+		new File(config.getConfigFileParameter("javaOutputdir")).mkdirs();
+		new File(config.getConfigFileParameter("phpOutputdir")).mkdirs();
 
 		int generateJavaCode = Integer.parseInt(config.getConfigFileParameter("generateJavaCode"));
 		int generatePhpCode = Integer.parseInt(config.getConfigFileParameter("generatePhpCode"));
