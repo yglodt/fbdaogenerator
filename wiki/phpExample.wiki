@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary This page shows you how to make use of the generated PHP code
 
 = Example Table =
 
@@ -140,7 +140,7 @@ $dao = new TableTestDAOFirebird($conn);
 $t = $dao->get(1);
 
 // print out the string_field colum
-$t->getStringField();
+print $t->getStringField();
 
 // update the string field
 $t->getStringField("new data");
