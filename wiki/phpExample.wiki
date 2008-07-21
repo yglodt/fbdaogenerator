@@ -129,6 +129,7 @@ class TableTestDAOFirebird {
 = Usage example =
 
 {{{
+<?php
 
 // Create a database connection
 $conn = ibase_connect('server:alias', 'SYSDBA', 'masterkey');
@@ -148,4 +149,6 @@ $t->getStringField("new data");
 
 // Save the modified object back to the database
 $dao->update($t);
+
+?>
 }}}
