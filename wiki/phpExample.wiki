@@ -1,4 +1,4 @@
-#summary This page shows you how to make use of the generated PHP code
+#summary Shows you how to make use of the generated PHP code
 
 = Example Table =
 
