@@ -12,7 +12,9 @@ create table table_test (
 
 = Resulting PHP code =
 
-This is the PHP code that fbdaogenerator will create out of it
+This is the PHP code that fbdaogenerator will create out of it.
+
+TableTest.php:
 
 {{{
 <?php
@@ -130,6 +132,8 @@ class TableTestDAOFirebird {
 
 {{{
 <?php
+
+include("TableTest.php");
 
 // Create a database connection
 $conn = ibase_connect('server:alias', 'SYSDBA', 'masterkey');
