@@ -53,8 +53,8 @@ public class JavaSpecific {
 	
 	public static void generateCode(String table) {
 		final Configuration config = new Configuration();
-		String outPutDir = config.getConfigFileParameter("outputdir");
-		outPutDir = outPutDir + File.separator + config.getConfigFileParameter("package").replaceAll("\\.", "/") + "/";
+		String outPutDir = config.getConfigFileParameter("javaOutputdir");
+		outPutDir = outPutDir + File.separator + config.getConfigFileParameter("javaPackage").replaceAll("\\.", System.getProperty("file.separator")) + System.getProperty("file.separator");
 		Helpers.deleteDir(new File(outPutDir));
 		new File(outPutDir).mkdirs();
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
@@ -94,7 +94,7 @@ public class JavaSpecific {
 		// create java class with getters and setters
 		classFile = new PrintStream(classFileHandle);
 		classFile.println("package "
-				+ config.getConfigFileParameter("package") + ";");
+				+ config.getConfigFileParameter("javaPackage") + ";");
 		classFile.println();
 		classFile.println("import java.util.Date;");
 		classFile.println();
@@ -120,7 +120,7 @@ public class JavaSpecific {
 		// create DAO java interface
 		daoFile = new PrintStream(daoFileHandle);
 		daoFile.println("package "
-				+ config.getConfigFileParameter("package") + ";");
+				+ config.getConfigFileParameter("javaPackage") + ";");
 		daoFile.println();
 		daoFile.println("import java.util.Date;");
 		daoFile.println();
@@ -162,7 +162,7 @@ public class JavaSpecific {
 		// create DAO implementation
 		daoImpFile = new PrintStream(daoImpFileHandle);
 		daoImpFile.println("package "
-				+ config.getConfigFileParameter("package") + ";");
+				+ config.getConfigFileParameter("javaPackage") + ";");
 		daoImpFile.println();
 		daoImpFile.println("import java.sql.*;");
 		daoImpFile.println("import java.util.ArrayList;");
@@ -457,7 +457,7 @@ public class JavaSpecific {
 		daoImpFile.println("}");
 		daoImpFile.close();
 
-		JarBuilder jb = new JarBuilder(new File("/tmp/dao"), new File("/tmp/dao.jar"));
+		JarBuilder jb = new JarBuilder(new File(config.getConfigFileParameter("javaOutputdir")), new File(config.getConfigFileParameter("jarFilename").replace("$V", schemaVersion)));
 		jb.compileAndBuildJar();
 
 	}
