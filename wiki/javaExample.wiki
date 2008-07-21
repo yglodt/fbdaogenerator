@@ -205,7 +205,7 @@ connInfo.put("user", "SYSDBA");
 connInfo.put("password", "masterkey");
 connInfo.put("charSet", "ISO-8859-1");
 
-conn = DriverManager.getConnection ("jdbc:firebirdsql:server:alias", connInfo);
+conn = DriverManager.getConnection("jdbc:firebirdsql:server:alias", connInfo);
 
 // Create an instance of the data-access object
 TableTestDAOFirebird dao = new TableTestDAOFirebird(conn);
