@@ -219,7 +219,7 @@ TableTestDAOFirebird dao = new TableTestDAOFirebird(conn);
 TableTest t = dao.get(1);
 
 // Print out the string_field column
-System.out.println(t.getId();
+System.out.println(t.getId());
 
 // Update the string field with a new value
 t.setStringField("new value");
