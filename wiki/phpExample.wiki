@@ -145,7 +145,7 @@ $t = $dao->get(1);
 print $t->getStringField();
 
 // Update the string field with a new value
-$t->getStringField("new data");
+$t->setStringField("new data");
 
 // Save the modified object back to the database
 $dao->update($t);
