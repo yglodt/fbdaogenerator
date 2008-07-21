@@ -1,4 +1,4 @@
-#summary Shows you how to use the generated PHP code
+#summary How to use the generated Java code
 
 = Example Database Table =
 
