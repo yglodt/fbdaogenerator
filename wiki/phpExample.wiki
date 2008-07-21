@@ -1,0 +1,150 @@
+#summary One-sentence summary of this page.
+
+= Example Table =
+
+See the following table structure:
+{{{
+create table table_test (
+  id integer not null primary key,
+  string_field varchar(16)
+);
+}}}
+
+= Resulting PHP code =
+
+This is the PHP code that fbdaogenerator will create out of it
+
+{{{
+<?php
+
+class TableTest {
+
+	// Primary Key Fields: ID
+
+	private $id;
+	private $stringField;
+
+	public function getId() {
+		return $this->id;
+	}
+
+	public function setId($id) {
+		$this->id = $id;
+	}
+
+	public function getStringField() {
+		return $this->stringField;
+	}
+
+	public function setStringField($stringField) {
+		$this->stringField = $stringField;
+	}
+}
+
+class TableTestDAOFirebird {
+	private $conn;
+	private $trans;
+
+	protected function getConn() {
+		return $this->conn;
+	}
+
+	protected function setConn($conn) {
+		$this->conn = $conn;
+	}
+
+	public function __construct($conn) {
+		$this->setConn($conn);
+		$this->trans = ibase_trans($conn);
+	}
+
+	public function get($id) {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST where ID = ?';
+		$sth = ibase_query($this->getConn(), $query, $id);
+		$temp = new TableTest();
+		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
+			$temp->setId($row[0]);
+			$temp->setStringField($row[1]);
+		}
+		return $temp;
+	}
+
+	public function getAll() {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST';
+		$sth = ibase_query($this->getConn(), $query);
+		$temp = new TableTest();
+		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
+			$temp->setId($row[0]);
+			$temp->setStringField($row[1]);
+			$tempArray[] = $temp;
+		}
+		return $tempArray;
+	}
+
+	public function getAllWithClause($clause) {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST where '.$clause;
+		$sth = ibase_query($this->getConn(), $query);
+		$temp = new TableTest();
+		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
+			$temp->setId($row[0]);
+			$temp->setStringField($row[1]);
+			$tempArray[] = $temp;
+		}
+		return $tempArray;
+	}
+
+	function insert($o) {
+		$stmt = 'insert into TABLE_TEST (ID,STRING_FIELD) values (?,?)';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId(), $o->getStringField());
+		return $result;
+	}
+
+	function update($o) {
+		$stmt = 'update TABLE_TEST set ID = ?, STRING_FIELD = ? where ID = ?';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId(), $o->getStringField(), $o->getId());
+		return $result;
+	}
+
+	function delete($o) {
+		$stmt = 'delete from TABLE_TEST where ID = ?';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId());
+		return $result;
+	}
+
+	public function commit() {
+		return ibase_commit($this->trans);
+	}
+
+	public function rollback() {
+		return ibase_rollback($this->trans);
+	}
+}
+
+?>
+}}}
+
+= Usage example =
+
+{{{
+
+// create a database connection
+$conn = ibase_connect('server:alias', 'SYSDBA', 'masterkey');
+
+// create an instance of the data-access object
+$dao = new TableTestDAOFirebird($conn);
+
+// use the get() method to fetch a record into an instance of the TableTest class, here we fetch the record with the ID = 1
+$t = $dao->get(1);
+
+// print out the string_field colum
+$t->getStringField();
+
+// update the string field
+$t->getStringField("new data");
+
+// save the modified object back to the database
+$dao->update($t);
+}}}
