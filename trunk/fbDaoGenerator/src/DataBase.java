@@ -23,7 +23,7 @@ public class DataBase {
 
 	public static String getSchemaVersion() {
 		String version = null;
-		String sql = config.getConfigFileParameter("SchemaVersionSQL");
+		String sql = config.getConfigFileParameter("schemaVersionSQL");
 		if ((sql != null) && (sql != "")) {
 			try {
 				PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);

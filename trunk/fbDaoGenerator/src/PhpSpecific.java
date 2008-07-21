@@ -23,13 +23,13 @@ public class PhpSpecific {
 
 	public static void generateCode(String table) {
 		final Configuration config = new Configuration();
-		String outPutDir = config.getConfigFileParameter("outputdir")+"/";
+		String outPutDir = config.getConfigFileParameter("phpOutputdir")+System.getProperty("file.separator");
 //		System.out.println(outPutDir);
 //		outPutDir = outPutDir + File.separator + config.getConfigFileParameter("package").replaceAll("\\.", "/") + "/";
 //		Helpers.deleteDir(new File(outPutDir));
 		new File(outPutDir).mkdirs();
 
-//		String schemaVersion = DataBase.getSchemaVersion();
+		String schemaVersion = DataBase.getSchemaVersion();
 
 		System.out.println("Generating PHP code for table: " + table);
 		ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
