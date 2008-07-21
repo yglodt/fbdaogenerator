@@ -212,14 +212,19 @@ try {
 }
 
 // Create an instance of the data-access object
-
+TableTestDAOFirebird dao = new TableTestDAOFirebird(conn);
+		
 // Use the get() method to fetch a record
-// The resulting variable $t is an instance of the TableTest object
+// The resulting variable t is an instance of the TableTest object
+TableTest t = dao.get(1);
 
 // Print out the string_field column
+System.out.println(t.getId();
 
 // Update the string field with a new value
+t.setStringField("new value");
 
 // Save the modified object back to the database
+dao.update(t);
 
 }}}
