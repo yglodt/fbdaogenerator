@@ -88,7 +88,13 @@ public class JavaSpecific {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		columnList = Table.getColumList(table);
+
+		Table t = new Table();
+		columnList = t.getColumList(table);
+		String insertStatementFieldsList = t.getInsertStatementFieldsList();
+		String insertStatementPlaceHolders = t.getInsertStatementPlaceHolders();
+		String updateStatementFieldsList = t.getUpdateStatementFieldsList();
+		String pkWhereStatement = t.getPkWhereStatement();
 
 		// create java class with getters and setters
 		classFile = new PrintStream(classFileHandle);
