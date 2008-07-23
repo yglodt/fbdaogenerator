@@ -5,8 +5,17 @@ import java.util.ArrayList;
 
 public class Table {
 	private static Configuration config =  new Configuration();
+	
+	private String insertStatementFieldsList;
+	private String insertStatementPlaceHolders;
+	private String updateStatementFieldsList;
+	private String pkWhereStatement;
 
-	public static ArrayList<DataFieldFirebird> getColumList(String table) {
+	public Table() {
+		super();
+	}
+
+	public ArrayList<DataFieldFirebird> getColumList(String table) {
 		ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
 		ArrayList<String> pkFields = new ArrayList<String>();
 		
@@ -43,20 +52,68 @@ public class Table {
 		"where RDB$RELATION_NAME = ? "+
 		"and F.RDB$SYSTEM_FLAG = 0 "+
 		"order by RDB$FIELD_POSITION ";
+		String insertStatementFieldsList = "";
+		String insertStatementPlaceHolders = "";
+		String updateStatementFieldsList = "";
+		String pkWhereStatement = " where ";
 		try {
 			PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);
 			pstmt.setString(1, table);
 			ResultSet rst = pstmt.executeQuery();
+			
+
 			while(rst.next()) {
+				insertStatementFieldsList = insertStatementFieldsList + rst.getString(1).trim() + ",";
+				insertStatementPlaceHolders = insertStatementPlaceHolders + "?,";
+				updateStatementFieldsList = updateStatementFieldsList + rst.getString(1).trim() + "=?,";
 				DataFieldFirebird dff = new DataFieldFirebird(rst.getString(1).trim(), rst.getString(2).trim(), rst.getInt(3), rst.getInt(5));
 				if (pkFields.contains(rst.getString(1).trim())) {
 					dff.setInPK(true);
+					pkWhereStatement = pkWhereStatement + rst.getString(1).trim() + "=?,";
 				}
 				columnList.add(dff);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		this.setInsertStatementFieldsList(insertStatementFieldsList.substring(0, insertStatementFieldsList.length()-1));
+		this.setInsertStatementPlaceHolders(insertStatementPlaceHolders.substring(0, insertStatementPlaceHolders.length()-1));
+		this.setUpdateStatementFieldsList(updateStatementFieldsList.substring(0, updateStatementFieldsList.length()-1));
+		this.setPkWhereStatement(pkWhereStatement.substring(0, pkWhereStatement.length()-1));
+
 		return columnList;
+	}
+
+	public String getInsertStatementFieldsList() {
+		return insertStatementFieldsList;
+	}
+
+	private void setInsertStatementFieldsList(String insertStatementFieldsList) {
+		this.insertStatementFieldsList = insertStatementFieldsList;
+	}
+
+	public String getInsertStatementPlaceHolders() {
+		return insertStatementPlaceHolders;
+	}
+
+	private void setInsertStatementPlaceHolders(String insertStatementPlaceHolders) {
+		this.insertStatementPlaceHolders = insertStatementPlaceHolders;
+	}
+
+	public String getUpdateStatementFieldsList() {
+		return updateStatementFieldsList;
+	}
+
+	private void setUpdateStatementFieldsList(String updateStatementFieldsList) {
+		this.updateStatementFieldsList = updateStatementFieldsList;
+	}
+
+	public String getPkWhereStatement() {
+		return pkWhereStatement;
+	}
+
+	private void setPkWhereStatement(String pkWhereStatement) {
+		this.pkWhereStatement = pkWhereStatement;
 	}
 }

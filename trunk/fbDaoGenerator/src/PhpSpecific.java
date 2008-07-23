@@ -1,10 +1,7 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-
 
 public class PhpSpecific {
 /*
@@ -40,7 +37,13 @@ public class PhpSpecific {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		columnList = Table.getColumList(table);
+
+		Table t = new Table();
+		columnList = t.getColumList(table);
+		String insertStatementFieldsList = t.getInsertStatementFieldsList();
+		String insertStatementPlaceHolders = t.getInsertStatementPlaceHolders();
+		String updateStatementFieldsList = t.getUpdateStatementFieldsList();
+		String pkWhereStatement = t.getPkWhereStatement();
 
 		// create java class with getters and setters
 		phpFile = new PrintStream(fileHandle);
