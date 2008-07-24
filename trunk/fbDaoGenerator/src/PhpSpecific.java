@@ -91,30 +91,6 @@ public class PhpSpecific {
 		ob = ob.concat("\t\t$this->trans = ibase_trans($conn);\n");
 		ob = ob.concat("\t}\n\n");
 
-
-		String fieldsList = "";
-		for (DataFieldFirebird column : columnList) {
-			fieldsList = fieldsList + column.getName() + ",";
-		}
-		fieldsList = fieldsList.substring(0,(fieldsList.length() - 1));
-
-		String insertPlaceHolders = "";
-		for (DataFieldFirebird column : columnList) {
-			insertPlaceHolders = insertPlaceHolders + "?,";
-		}
-		insertPlaceHolders = insertPlaceHolders.substring(0, (insertPlaceHolders.length() - 1));
-
-		String whereClause = "";
-		for (DataFieldFirebird column : columnList) {
-			if (column.isInPK()) {
-				whereClause = whereClause + column.getName() + " = ? and ";
-			}
-		}
-		if (!whereClause.equals("")) {
-			whereClause = whereClause.substring(0,
-					(whereClause.length() - 5));
-		}
-
 		String getterParams = "";
 		for (DataFieldFirebird column : columnList) {
 			if (column.isInPK()) {
@@ -130,7 +106,7 @@ public class PhpSpecific {
 
 		// get(PK) method
 		ob = ob.concat("\tpublic function get("+getterParams+") {\n");
-		ob = ob.concat("\t\t$query = 'select " + fieldsList+ " from " + table + " where "+whereClause + "';\n");
+		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList+ " from " + table + pkWhereStatement + "';\n");
 		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query, "+getterParams+");\n");
 		ob = ob.concat("\t\t$temp = new "+tableJavaName+"();\n");
         ob = ob.concat("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {\n");
@@ -149,7 +125,7 @@ public class PhpSpecific {
 
 		// getAll() method
 		ob = ob.concat("\tpublic function getAll() {\n");
-		ob = ob.concat("\t\t$query = 'select " + fieldsList + " from " + table + "';\n");
+		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList + " from " + table + "';\n");
 		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query);\n");
 		ob = ob.concat("\t\t$temp = new "+tableJavaName+"();\n");
         ob = ob.concat("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {\n");
@@ -169,7 +145,7 @@ public class PhpSpecific {
 
 		// getAllWithClause($clause) method
 		ob = ob.concat("\tpublic function getAllWithClause($clause) {\n");
-		ob = ob.concat("\t\t$query = 'select " + fieldsList+ " from " + table + " where '.$clause;\n");
+		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList+ " from " + table + " where '.$clause;\n");
 		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query);\n");
 		ob = ob.concat("\t\t$temp = new "+tableJavaName+"();\n");
         ob = ob.concat("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {\n");
@@ -189,7 +165,7 @@ public class PhpSpecific {
 
 		// insert() method
 		ob = ob.concat("\tfunction insert($o) {\n");
-		ob = ob.concat("\t\t$stmt = 'insert into "+table+" ("+fieldsList+") values ("+insertPlaceHolders+")';\n");
+		ob = ob.concat("\t\t$stmt = 'insert into "+table+" ("+insertStatementFieldsList+") values ("+insertStatementPlaceHolders+")';\n");
 		ob = ob.concat("\t\t$sth = ibase_prepare($this->getConn(), $stmt);\n");
 		ob = ob.concat("\t\t$result = ibase_execute($sth, ");
 		columnCount = 0;
@@ -212,13 +188,8 @@ public class PhpSpecific {
 
 
 		// update() method
-		String updateValues = "";
-		for (DataFieldFirebird column : columnList) {
-			updateValues = updateValues + column.getName() + " = ?, ";
-		}
-		updateValues = updateValues.substring(0, (updateValues.length() - 2));
 		ob = ob.concat("\tfunction update($o) {\n");
-		ob = ob.concat("\t\t$stmt = 'update "+table+" set "+updateValues+" where "+whereClause+"';\n");
+		ob = ob.concat("\t\t$stmt = 'update "+table+" set "+updateStatementFieldsList+pkWhereStatement+"';\n");
 		ob = ob.concat("\t\t$sth = ibase_prepare($this->getConn(), $stmt);\n");
 		ob = ob.concat("\t\t$result = ibase_execute($sth, ");
 		columnCount = 0;
@@ -253,7 +224,7 @@ public class PhpSpecific {
 
 		// delete() method
 		ob = ob.concat("\tfunction delete($o) {\n");
-		ob = ob.concat("\t\t$stmt = 'delete from "+table+" where "+whereClause+"';\n");
+		ob = ob.concat("\t\t$stmt = 'delete from "+table+pkWhereStatement+"';\n");
 		ob = ob.concat("\t\t$sth = ibase_prepare($this->getConn(), $stmt);\n");
 		ob = ob.concat("\t\t$result = ibase_execute($sth, ");
 		columnCount = 0;

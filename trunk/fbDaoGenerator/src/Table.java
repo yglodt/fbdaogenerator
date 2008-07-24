@@ -60,8 +60,6 @@ public class Table {
 			PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);
 			pstmt.setString(1, table);
 			ResultSet rst = pstmt.executeQuery();
-			
-
 			while(rst.next()) {
 				insertStatementFieldsList = insertStatementFieldsList + rst.getString(1).trim() + ",";
 				insertStatementPlaceHolders = insertStatementPlaceHolders + "?,";
