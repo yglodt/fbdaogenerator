@@ -74,7 +74,7 @@ public class PhpSpecific {
 		ob = ob.concat("}\n");
 
 		// create DAO implementation
-		ob = ob.concat("\nclass " + tableJavaName + "DAOFirebird {\n");
+		ob = ob.concat("\nclass " + tableJavaName + "DAO {\n");
 		ob = ob.concat("\tprivate $conn;\n");
 		ob = ob.concat("\tprivate $trans;\n\n");
 
@@ -145,10 +145,14 @@ public class PhpSpecific {
 
 		// getAllWithClause($clause) method
 		ob = ob.concat("\tpublic function getAllWithClause($clause) {\n");
-		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList+ " from " + table + " where '.$clause;\n");
-		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query);\n");
-		ob = ob.concat("\t\t$temp = new "+tableJavaName+"();\n");
+		ob = ob.concat("\t\t$parameters = func_get_args();\n");
+		ob = ob.concat("\t\t$clause = array_shift($parameters);\n");
+
+		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList+ " from " + table + " '.$clause;\n");
+		ob = ob.concat("\t\t$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));\n");
+//		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query);\n");
         ob = ob.concat("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {\n");
+		ob = ob.concat("\t\t\t$temp = new "+tableJavaName+"();\n");
 		columnCount = 0;
 		for (DataFieldFirebird column : columnList) {
 			ob = ob.concat("\t\t\t$temp->set"
