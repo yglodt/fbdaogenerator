@@ -67,7 +67,7 @@ public class Table {
 				DataFieldFirebird dff = new DataFieldFirebird(rst.getString(1).trim(), rst.getString(2).trim(), rst.getInt(3), rst.getInt(5));
 				if (pkFields.contains(rst.getString(1).trim())) {
 					dff.setInPK(true);
-					pkWhereStatement = pkWhereStatement + rst.getString(1).trim() + "=?,";
+					pkWhereStatement = pkWhereStatement + rst.getString(1).trim() + "=? and ";
 				}
 				columnList.add(dff);
 			}
@@ -78,7 +78,7 @@ public class Table {
 		this.setInsertStatementFieldsList(insertStatementFieldsList.substring(0, insertStatementFieldsList.length()-1));
 		this.setInsertStatementPlaceHolders(insertStatementPlaceHolders.substring(0, insertStatementPlaceHolders.length()-1));
 		this.setUpdateStatementFieldsList(updateStatementFieldsList.substring(0, updateStatementFieldsList.length()-1));
-		this.setPkWhereStatement(pkWhereStatement.substring(0, pkWhereStatement.length()-1));
+		this.setPkWhereStatement(pkWhereStatement.substring(0, pkWhereStatement.length()-5));
 
 		return columnList;
 	}
