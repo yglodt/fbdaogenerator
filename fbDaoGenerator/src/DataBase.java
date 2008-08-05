@@ -22,7 +22,7 @@ public class DataBase {
 	}
 
 	public static String getSchemaVersion() {
-		String version = null;
+		String version = "";
 		String sql = config.getConfigFileParameter("schemaVersionSQL");
 		if ((sql != null) && (sql != "")) {
 			try {
