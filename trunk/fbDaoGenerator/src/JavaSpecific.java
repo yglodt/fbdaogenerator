@@ -30,7 +30,8 @@ public class JavaSpecific {
 			javaType = "Timestamp";
 			cast = "(java.sql.Timestamp) ";
 		} else if (javaType.equals("Integer")) {
-			return "setInt("+position+", "+cast+javaName+");";
+			//return "setInt("+position+", "+cast+javaName+");";
+			return "setObject("+position+", "+cast+javaName+");";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
 		}
@@ -194,7 +195,7 @@ public class JavaSpecific {
 			getterParams = getterParams.substring(0,
 					(getterParams.length() - 2));
 		}
-		// make list of colums to fetch, instead of "select *"
+		// make list of columns to fetch, instead of "select *"
 		String selectColumns = "";
 		for (DataFieldFirebird column : columnList) {
 			selectColumns = selectColumns + column.getName() + ",";
