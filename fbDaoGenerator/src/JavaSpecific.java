@@ -55,9 +55,6 @@ public class JavaSpecific {
 		new File(outPutDir).mkdirs();
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
 
-		// this has to be moved out of here because it does one SELECT per table
-		String schemaVersion = DataBase.getSchemaVersion();
-
 		System.out.println("Generating Java code for table: " + table);
 		ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
 		PrintStream classFile;
@@ -461,9 +458,5 @@ public class JavaSpecific {
 		daoImpFile.println("\t}");
 		daoImpFile.println("}");
 		daoImpFile.close();
-
-		JarBuilder jb = new JarBuilder(new File(config.getConfigFileParameter("javaOutputdir")), new File(config.getConfigFileParameter("jarFilename").replace("$V", schemaVersion)));
-		jb.compileAndBuildJar();
-
 	}
 }
