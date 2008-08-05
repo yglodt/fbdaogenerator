@@ -61,10 +61,10 @@ public class Table {
 			pstmt.setString(1, table);
 			ResultSet rst = pstmt.executeQuery();
 			while(rst.next()) {
-				insertStatementFieldsList = insertStatementFieldsList + rst.getString(1).trim() + ",";
+				insertStatementFieldsList = insertStatementFieldsList + rst.getString("RDB$FIELD_NAME").trim() + ",";
 				insertStatementPlaceHolders = insertStatementPlaceHolders + "?,";
-				updateStatementFieldsList = updateStatementFieldsList + rst.getString(1).trim() + "=?,";
-				DataFieldFirebird dff = new DataFieldFirebird(rst.getString(1).trim(), rst.getString(2).trim(), rst.getInt(3), rst.getInt(5));
+				updateStatementFieldsList = updateStatementFieldsList + rst.getString("RDB$FIELD_NAME").trim() + "=?,";
+				DataFieldFirebird dff = new DataFieldFirebird(rst.getString("RDB$FIELD_NAME").trim(), rst.getString("RDB$TYPE_NAME").trim(), rst.getInt("RDB$CHARACTER_LENGTH"), rst.getInt("RDB$NULL_FLAG"));
 				if (pkFields.contains(rst.getString(1).trim())) {
 					dff.setInPK(true);
 					pkWhereStatement = pkWhereStatement + rst.getString(1).trim() + "=? and ";

@@ -18,5 +18,11 @@ public class Main {
 			if (generatePhpCode == 1) PhpSpecific.generateCode(table);
 		}
 
+		if (generateJavaCode == 1) {
+			System.out.println("Compiling classes and creating jar file...");
+			String schemaVersion = DataBase.getSchemaVersion();
+			JarBuilder jb = new JarBuilder(new File(config.getConfigFileParameter("javaOutputdir")), new File(config.getConfigFileParameter("jarFilename").replace("$V", schemaVersion)));
+			jb.compileAndBuildJar();
+		}
 	}
 }
