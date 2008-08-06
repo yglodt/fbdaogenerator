@@ -30,7 +30,6 @@ public class JavaSpecific {
 			javaType = "Timestamp";
 			cast = "(java.sql.Timestamp) ";
 		} else if (javaType.equals("Integer")) {
-			//return "setInt("+position+", "+cast+javaName+");";
 			return "setObject("+position+", "+cast+javaName+");";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
@@ -38,15 +37,18 @@ public class JavaSpecific {
 		return "set"+javaType+"("+position+", "+cast+javaName+");";
 	}
 	
-	public static String createResultSetGetter(String javaType, int position) {
+	public static String createResultSetGetter(String var, String javaType, int position) {
+		// creates rst.getXXXX(1);
+		String cast = "";
 		if (javaType.equals("Date")) {
 			javaType = "Timestamp";
 		} else if (javaType.equals("Integer")) {
-			javaType = "Int";
+			cast = " (Integer) ";
+			javaType = "Object";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
 		}
-		return "get"+javaType+"("+position+")";
+		return cast+var+".get"+javaType+"("+position+")";
 	}
 	
 	public static void generateCode(String table) {
@@ -243,8 +245,8 @@ public class JavaSpecific {
 			daoImpFile.println("\t\t\t\trecord.set"
 					+ column.getJavaName().substring(0, 1).toUpperCase()
 					+ column.getJavaName().substring(1)
-					+ "(rst."
-					+ JavaSpecific.createResultSetGetter(column
+					+ "("
+					+ JavaSpecific.createResultSetGetter("rst", column
 							.getJavaType(), columnCount) + ");");
 			columnCount++;
 		}
@@ -275,8 +277,8 @@ public class JavaSpecific {
 			daoImpFile.println("\t\t\t\trecord.set"
 					+ column.getJavaName().substring(0, 1).toUpperCase()
 					+ column.getJavaName().substring(1)
-					+ "(rst."
-					+ JavaSpecific.createResultSetGetter(column
+					+ "("
+					+ JavaSpecific.createResultSetGetter("rst", column
 							.getJavaType(), columnCount) + ");");
 			columnCount++;
 		}
@@ -310,8 +312,8 @@ public class JavaSpecific {
 			daoImpFile.println("\t\t\t\trecord.set"
 					+ column.getJavaName().substring(0, 1).toUpperCase()
 					+ column.getJavaName().substring(1)
-					+ "(rst."
-					+ JavaSpecific.createResultSetGetter(column
+					+ "("
+					+ JavaSpecific.createResultSetGetter("rst", column
 							.getJavaType(), columnCount) + ");");
 			columnCount++;
 		}
