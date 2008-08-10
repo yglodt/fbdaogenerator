@@ -41,7 +41,6 @@ public class TableTest {
 		this.stringField = stringField;
 	}
 }
-
 }}}
 
 TableTestDAO.java
@@ -92,10 +91,10 @@ public class TableTestDAOFirebird implements TableTestDAO {
 		TableTest record = new TableTest();
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, id);
+			pstmt.setObject(1, id);
 			rst = pstmt.executeQuery();
 			while(rst.next()) {
-				record.setId(rst.getInt(1));
+				record.setId( (Integer) rst.getObject(1));
 				record.setStringField(rst.getString(2));
 			}
 		} catch (SQLException e) {
@@ -114,7 +113,7 @@ public class TableTestDAOFirebird implements TableTestDAO {
 			rst = pstmt.executeQuery();
 			while(rst.next()) {
 				TableTest record = new TableTest();
-				record.setId(rst.getInt(1));
+				record.setId( (Integer) rst.getObject(1));
 				record.setStringField(rst.getString(2));
 				list.add(record);
 			}
@@ -134,7 +133,7 @@ public class TableTestDAOFirebird implements TableTestDAO {
 			rst = pstmt.executeQuery();
 			while(rst.next()) {
 				TableTest record = new TableTest();
-				record.setId(rst.getInt(1));
+				record.setId( (Integer) rst.getObject(1));
 				record.setStringField(rst.getString(2));
 				list.add(record);
 			}
@@ -151,7 +150,7 @@ public class TableTestDAOFirebird implements TableTestDAO {
 		"values (?, ?)";
 		try {
 			pstmt = conn.prepareStatement(stmt);
-			pstmt.setInt(1, record.getId());
+			pstmt.setObject(1, record.getId());
 			pstmt.setString(2, record.getStringField());
 			int result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -166,9 +165,9 @@ public class TableTestDAOFirebird implements TableTestDAO {
 		"ID = ?";
 		try {
 			pstmt = conn.prepareStatement(stmt);
-			pstmt.setInt(1, record.getId());
+			pstmt.setObject(1, record.getId());
 			pstmt.setString(2, record.getStringField());
-			pstmt.setInt(3, record.getId());
+			pstmt.setObject(3, record.getId());
 			int result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -181,7 +180,7 @@ public class TableTestDAOFirebird implements TableTestDAO {
 		"ID = ?";
 		try {
 			pstmt = conn.prepareStatement(stmt);
-			pstmt.setInt(1, record.getId());
+			pstmt.setObject(1, record.getId());
 			int result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
