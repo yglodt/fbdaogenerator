@@ -31,6 +31,10 @@ public class JavaSpecific {
 			cast = "(java.sql.Timestamp) ";
 		} else if (javaType.equals("Integer")) {
 			return "setObject("+position+", "+cast+javaName+");";
+		} else if (javaType.equals("Float")) {
+			return "setObject("+position+", "+cast+javaName+");";
+		} else if (javaType.equals("Double")) {
+			return "setObject("+position+", "+cast+javaName+");";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
 		}
@@ -44,6 +48,12 @@ public class JavaSpecific {
 			javaType = "Timestamp";
 		} else if (javaType.equals("Integer")) {
 			cast = " (Integer) ";
+			javaType = "Object";
+		} else if (javaType.equals("Float")) {
+			cast = " (Float) ";
+			javaType = "Object";
+		} else if (javaType.equals("Double")) {
+			cast = " (Double) ";
 			javaType = "Object";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);

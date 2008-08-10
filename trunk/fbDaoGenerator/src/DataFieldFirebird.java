@@ -20,8 +20,8 @@ public class DataFieldFirebird {
 		typeMapping.put("INTEGER", "Integer");
 		typeMapping.put("INT64", "Integer");
 		typeMapping.put("LONG", "Integer");
-		typeMapping.put("DOUBLE", "double");
-		typeMapping.put("FLOAT", "float");
+		typeMapping.put("DOUBLE", "Double");
+		typeMapping.put("FLOAT", "Float");
 		typeMapping.put("VARYING", "String");
 		typeMapping.put("TEXT", "String");
 		typeMapping.put("BLOB", "String");
