@@ -2,7 +2,7 @@
 
 cd bin
 ln -sf ../fbdaogenerator.ini
-export CLASSPATH=.:../lib/jaybird-full-2.1.5.jar:../lib/ant.jar:/usr/lib/jvm/java-6-sun-1.6.0.06/lib/tools.jar
+export CLASSPATH=.:../lib/jaybird-full-2.1.5.jar:../lib/ant.jar:/usr/lib/jvm/java-6-sun-1.6.0.07/lib/tools.jar
 
 java Main
 
