@@ -150,11 +150,13 @@ public class PhpSpecific {
 		ob = ob.concat("\t}\n\n");
 
 		
-		// getAllWithClauseAndLimit($clause, $from, $to) method
-		ob = ob.concat("\tpublic function getAllWithClauseAndLimit($clause, $from, $to) {\n");
-		ob = ob.concat("\t\t$firstSkip = ' first '.(($to + 1) - $from).' skip '.($from - 1);\n");
+		// getAllWithClauseAndLimit($from, $to, $clause) method
+		ob = ob.concat("\tpublic function getAllWithClauseAndLimit($from, $to, $clause) {\n");
 		ob = ob.concat("\t\t$parameters = func_get_args();\n");
+		ob = ob.concat("\t\t$from = array_shift($parameters);\n");
+		ob = ob.concat("\t\t$to = array_shift($parameters);\n");
 		ob = ob.concat("\t\t$clause = array_shift($parameters);\n");
+		ob = ob.concat("\t\t$firstSkip = ' first '.(($to + 1) - $from).' skip '.($from - 1);\n");
 		ob = ob.concat("\t\t$query = 'select'.\"$firstSkip\".' " + insertStatementFieldsList+ " from " + table + " '.$clause;\n");
 		ob = ob.concat("\t\t$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));\n");
 		ob = ob.concat("\t\treturn $this->fillObject($sth);\n");
