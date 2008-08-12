@@ -45,7 +45,7 @@ public class PhpSpecific {
 		String updateStatementFieldsList = t.getUpdateStatementFieldsList();
 		String pkWhereStatement = t.getPkWhereStatement();
 
-		// create java class with getters and setters
+		// create PHP class with getters and setters
 		phpFile = new PrintStream(fileHandle);
 		ob = ob.concat("<?php\n");
 		ob = ob.concat("\nclass " + tableJavaName + " {\n");
@@ -63,12 +63,12 @@ public class PhpSpecific {
 			ob = ob.concat("\tprivate $" + column.getJavaName() + ";\n");
 		}
 
-		ob = ob.concat("\n\tfunction __construct() {}\n\n");
-		ob = ob.concat("\tfunction __destruct() {}\n");
+		ob = ob.concat("\n\tfunction __construct() {}\n");
+		ob = ob.concat("\tfunction __destruct() {}\n\n");
 
 		for (DataFieldFirebird column : columnList) {
-			ob = ob.concat("\n\tpublic function" + column.getPHPGetter() + " { return $this->" + column.getJavaName() + "; }\n");
-			ob = ob.concat("\n\tpublic function" + column.getPHPSetter() + " { $this->" + column.getJavaName() + " = $"+ column.getJavaName() + "; }\n");
+			ob = ob.concat("\tpublic function" + column.getPHPGetter() + " { return $this->" + column.getJavaName() + "; }\n");
+			ob = ob.concat("\tpublic function" + column.getPHPSetter() + " { $this->" + column.getJavaName() + " = $"+ column.getJavaName() + "; }\n");
 		}
 		ob = ob.concat("}\n");
 
