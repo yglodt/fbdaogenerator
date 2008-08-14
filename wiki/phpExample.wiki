@@ -20,97 +20,96 @@ TableTest.php:
 <?php
 
 class TableTest {
-
-	// Primary Key Fields: ID
-
+	// Primary Key Field(s): ID
 	private $id;
 	private $stringField;
 
-	public function getId() {
-		return $this->id;
-	}
+	function __construct() {}
+	function __destruct() {}
 
-	public function setId($id) {
-		$this->id = $id;
-	}
-
-	public function getStringField() {
-		return $this->stringField;
-	}
-
-	public function setStringField($stringField) {
-		$this->stringField = $stringField;
-	}
+	public function getId() { return $this->id; }
+	public function setId($id) { $this->id = $id; }
+	public function getStringField() { return $this->stringField; }
+	public function setStringField($stringField) { $this->stringField = $stringField; }
 }
 
-class TableTestDAOFirebird {
+class TableTestDAO {
 	private $conn;
 	private $trans;
-
-	protected function getConn() {
-		return $this->conn;
-	}
-
-	protected function setConn($conn) {
-		$this->conn = $conn;
-	}
 
 	public function __construct($conn) {
 		$this->setConn($conn);
 		$this->trans = ibase_trans($conn);
 	}
 
-	public function get($id) {
-		$query = 'select ID,STRING_FIELD from TABLE_TEST where ID = ?';
-		$sth = ibase_query($this->getConn(), $query, $id);
-		$temp = new TableTest();
+	public function __destruct() {
+	}
+
+	private function getConn() {
+		return $this->conn;
+	}
+
+	private function setConn($conn) {
+		$this->conn = $conn;
+	}
+
+	private function fillObject($sth) {
 		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
+			$temp = new TableTest();
 			$temp->setId($row[0]);
 			$temp->setStringField($row[1]);
+			$tempArray[] = $temp;
 		}
-		return $temp;
+		return (count($tempArray) > 1) ? $tempArray : $tempArray[0];
+	}
+
+	public function get($id) {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST where ID=?';
+		$sth = ibase_query($this->getConn(), $query, $id);
+		return $this->fillObject($sth);
 	}
 
 	public function getAll() {
 		$query = 'select ID,STRING_FIELD from TABLE_TEST';
 		$sth = ibase_query($this->getConn(), $query);
-		$temp = new TableTest();
-		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
-			$temp->setId($row[0]);
-			$temp->setStringField($row[1]);
-			$tempArray[] = $temp;
-		}
-		return $tempArray;
+		return $this->fillObject($sth);
 	}
 
 	public function getAllWithClause($clause) {
-		$query = 'select ID,STRING_FIELD from TABLE_TEST where '.$clause;
-		$sth = ibase_query($this->getConn(), $query);
-		$temp = new TableTest();
-		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
-			$temp->setId($row[0]);
-			$temp->setStringField($row[1]);
-			$tempArray[] = $temp;
-		}
-		return $tempArray;
+		$parameters = func_get_args();
+		$clause = array_shift($parameters);
+		$query = 'select ID,STRING_FIELD from TABLE_TEST '.$clause;
+		$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));
+		return $this->fillObject($sth);
 	}
 
-	function insert($o) {
+	public function getAllWithClauseAndLimit($from, $to, $clause) {
+		$parameters = func_get_args();
+		$from = array_shift($parameters);
+		$to = array_shift($parameters);
+		$clause = array_shift($parameters);
+		$firstSkip = ' first '.(($to + 1) - $from).' skip '.($from - 1);
+		$query = 'select'."$firstSkip".' ID,STRING_FIELD from TABLE_TEST '.$clause;
+		$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));
+		return $this->fillObject($sth);
+	}
+
+	public function insert($o) {
 		$stmt = 'insert into TABLE_TEST (ID,STRING_FIELD) values (?,?)';
 		$sth = ibase_prepare($this->getConn(), $stmt);
 		$result = ibase_execute($sth, $o->getId(), $o->getStringField());
 		return $result;
 	}
 
-	function update($o) {
-		$stmt = 'update TABLE_TEST set ID = ?, STRING_FIELD = ? where ID = ?';
+	public function update($o) {
+		$stmt = 'update TABLE_TEST set ID=?,STRING_FIELD=? where ID=?';
 		$sth = ibase_prepare($this->getConn(), $stmt);
 		$result = ibase_execute($sth, $o->getId(), $o->getStringField(), $o->getId());
 		return $result;
 	}
 
-	function delete($o) {
-		$stmt = 'delete from TABLE_TEST where ID = ?';
+	public function delete($o) {
+		$stmt = 'delete from TABLE_TEST where ID=?';
 		$sth = ibase_prepare($this->getConn(), $stmt);
 		$result = ibase_execute($sth, $o->getId());
 		return $result;
