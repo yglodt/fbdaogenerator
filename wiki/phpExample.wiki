@@ -53,20 +53,20 @@ class TableTestDAO {
 		$this->conn = $conn;
 	}
 
-	private function fillObject($sth) {
+	private function fillObject($sth, $returnArray = true) {
 		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
 			$temp = new TableTest();
 			$temp->setId($row[0]);
 			$temp->setStringField($row[1]);
 			$tempArray[] = $temp;
 		}
-		return (count($tempArray) > 1) ? $tempArray : $tempArray[0];
+		return ($returnArray == true) ? $tempArray : $tempArray[0];
 	}
 
 	public function get($id) {
 		$query = 'select ID,STRING_FIELD from TABLE_TEST where ID=?';
 		$sth = ibase_query($this->getConn(), $query, $id);
-		return $this->fillObject($sth);
+		return $this->fillObject($sth, $returnArray = false);
 	}
 
 	public function getAll() {
