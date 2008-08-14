@@ -106,7 +106,7 @@ public class PhpSpecific {
 
 		
 		// fillObject(PK) method
-		ob = ob.concat("\tprivate function fillObject($sth) {\n");
+		ob = ob.concat("\tprivate function fillObject($sth, $returnArray = true) {\n");
 		//ob = ob.concat("\t\t$tempArray = array();\n");
         ob = ob.concat("\t\twhile ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {\n");
 		ob = ob.concat("\t\t\t$temp = new "+tableJavaName+"();\n");
@@ -120,7 +120,8 @@ public class PhpSpecific {
 		}
 		ob = ob.concat("\t\t\t$tempArray[] = $temp;\n");
         ob = ob.concat("\t\t}\n");
-		ob = ob.concat("\t\treturn (count($tempArray) > 1) ? $tempArray : $tempArray[0];\n");
+		//ob = ob.concat("\t\treturn (count($tempArray) > 1) ? $tempArray : $tempArray[0];\n");
+		ob = ob.concat("\t\treturn ($returnArray == true) ? $tempArray : $tempArray[0];\n");
 		ob = ob.concat("\t}\n\n");
 
 
@@ -128,7 +129,7 @@ public class PhpSpecific {
 		ob = ob.concat("\tpublic function get("+getterParams+") {\n");
 		ob = ob.concat("\t\t$query = 'select " + insertStatementFieldsList+ " from " + table + pkWhereStatement + "';\n");
 		ob = ob.concat("\t\t$sth = ibase_query($this->getConn(), $query, "+getterParams+");\n");
-		ob = ob.concat("\t\treturn $this->fillObject($sth);\n");
+		ob = ob.concat("\t\treturn $this->fillObject($sth, $returnArray = false);\n");
 		ob = ob.concat("\t}\n\n");
 
 
