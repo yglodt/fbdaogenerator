@@ -50,8 +50,9 @@ public class JavaSpecific {
 			cast = " (Integer) ";
 			javaType = "Object";
 		} else if (javaType.equals("Float")) {
-			cast = " (Float) ";
-			javaType = "Object";
+			// uncommenting this made code for vpn2 database be ok again, since it removed an invalid cast from double to float 
+			//cast = " (Float) ";
+			//javaType = "Object";
 		} else if (javaType.equals("Double")) {
 			cast = " (Double) ";
 			javaType = "Object";
