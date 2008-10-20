@@ -6,10 +6,10 @@ class Configuration {
 	private Connection conn = null;
 	private Properties configFile = null;
 
-	public Configuration() {
+	public Configuration(String confFile) {
 		this.configFile = new Properties();
 		try {
-			this.configFile.load(new FileInputStream(new File("fbdaogenerator.ini")));
+			this.configFile.load(new FileInputStream(new File(confFile)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Configuration-file not found.");

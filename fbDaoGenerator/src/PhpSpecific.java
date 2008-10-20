@@ -19,8 +19,7 @@ public class PhpSpecific {
 	}
 */
 	public static void generateCode(String table) {
-		final Configuration config = new Configuration();
-		String outPutDir = config.getConfigFileParameter("phpOutputdir")+System.getProperty("file.separator");
+		String outPutDir = Main.config.getConfigFileParameter("phpOutputdir")+System.getProperty("file.separator");
 
 //		String schemaVersion = DataBase.getSchemaVersion();
 

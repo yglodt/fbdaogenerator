@@ -64,9 +64,8 @@ public class JavaSpecific {
 	}
 	
 	public static void generateCode(String table) {
-		final Configuration config = new Configuration();
-		String outPutDir = config.getConfigFileParameter("javaOutputdir");
-		outPutDir = outPutDir + File.separator + config.getConfigFileParameter("javaPackage").replaceAll("\\.", System.getProperty("file.separator")) + System.getProperty("file.separator");
+		String outPutDir = Main.config.getConfigFileParameter("javaOutputdir");
+		outPutDir = outPutDir + File.separator + Main.config.getConfigFileParameter("javaPackage").replaceAll("\\.", System.getProperty("file.separator")) + System.getProperty("file.separator");
 		new File(outPutDir).mkdirs();
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
 
@@ -111,7 +110,7 @@ public class JavaSpecific {
 		// create java class with getters and setters
 		classFile = new PrintStream(classFileHandle);
 		classFile.println("package "
-				+ config.getConfigFileParameter("javaPackage") + ";");
+				+ Main.config.getConfigFileParameter("javaPackage") + ";");
 		classFile.println();
 		classFile.println("import java.util.Date;");
 		classFile.println();
@@ -137,7 +136,7 @@ public class JavaSpecific {
 		// create DAO java interface
 		daoFile = new PrintStream(daoFileHandle);
 		daoFile.println("package "
-				+ config.getConfigFileParameter("javaPackage") + ";");
+				+ Main.config.getConfigFileParameter("javaPackage") + ";");
 		daoFile.println();
 		daoFile.println("import java.util.Date;");
 		daoFile.println();
@@ -179,7 +178,7 @@ public class JavaSpecific {
 		// create DAO implementation
 		daoImpFile = new PrintStream(daoImpFileHandle);
 		daoImpFile.println("package "
-				+ config.getConfigFileParameter("javaPackage") + ";");
+				+ Main.config.getConfigFileParameter("javaPackage") + ";");
 		daoImpFile.println();
 		daoImpFile.println("import java.sql.*;");
 		daoImpFile.println("import java.util.ArrayList;");

@@ -1,10 +1,10 @@
 import java.io.File;
 
 public class Main {
+	public static Configuration config = null;
 
 	public static void main(String[] args) {
-
-		final Configuration config = new Configuration();
+		config = new Configuration(args[0]);
 		Helpers.deleteDir(new File(config.getConfigFileParameter("javaOutputdir")));
 		Helpers.deleteDir(new File(config.getConfigFileParameter("phpOutputdir")));
 		new File(config.getConfigFileParameter("javaOutputdir")).mkdirs();

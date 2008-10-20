@@ -20,7 +20,6 @@ import java.util.ArrayList;
  */
 
 public class Table {
-	private static Configuration config =  new Configuration();
 	
 	private String insertStatementFieldsList;
 	private String insertStatementPlaceHolders;
@@ -48,7 +47,7 @@ public class Table {
 	    "and RC.RDB$CONSTRAINT_TYPE = 'PRIMARY KEY' "+
 	    "order by S.RDB$FIELD_POSITION";
 		try {
-			PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);
+			PreparedStatement pstmt = Main.config.getDbConnection().prepareStatement(sql);
 			pstmt.setString(1, table);
 			pstmt.setString(2, table);
 			ResultSet rst = pstmt.executeQuery();
@@ -73,7 +72,7 @@ public class Table {
 		String updateStatementFieldsList = "";
 		String pkWhereStatement = " where ";
 		try {
-			PreparedStatement pstmt = config.getDbConnection().prepareStatement(sql);
+			PreparedStatement pstmt = Main.config.getDbConnection().prepareStatement(sql);
 			pstmt.setString(1, table);
 			ResultSet rst = pstmt.executeQuery();
 			while(rst.next()) {
