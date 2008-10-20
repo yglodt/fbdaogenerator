@@ -5,14 +5,14 @@ import lu.sitasoftware.azur.dao.*;
 
 public class Test {
 	public static void main(String[] args) {
-		Configuration config =  new Configuration();
+		//Configuration config =  new Configuration();
 
 		String noDossier = "690";
-		ArticleDAOFirebird dao = new ArticleDAOFirebird(config.getDbConnection());
+		//ArticleDAOFirebird dao = new ArticleDAOFirebird(config.getDbConnection());
 		//Article[] a = aDao.getAll("where NO_DOSSIER = "+Application.getConfigFileParameter("noDossier")+" and ACTIF_INTERVENTION = 'T' and ACTIF = 'T' and LIBELLE1 <> '' and LIBELLE1 is not NULL order by SIMPLE(LIBELLE1)"); //  TODO: $tempuserlimit
-		Article[] a = dao.getAll("where NO_DOSSIER = '"+noDossier+"' and ACTIF_INTERVENTION = 'T' and ACTIF = 'T' and LIBELLE1 <> '' and LIBELLE1 is not NULL order by SIMPLE(LIBELLE1)"); //  TODO: $tempuserlimit
+		//Article[] a = dao.getAll("where NO_DOSSIER = '"+noDossier+"' and ACTIF_INTERVENTION = 'T' and ACTIF = 'T' and LIBELLE1 <> '' and LIBELLE1 is not NULL order by SIMPLE(LIBELLE1)"); //  TODO: $tempuserlimit
 
-		System.out.println(a.length);
+		//System.out.println(a.length);
 		
 		/*
 		AtestDAOFirebird dao = new AtestDAOFirebird(config.getDbConnection());
