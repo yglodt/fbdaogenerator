@@ -25,6 +25,7 @@ public class JavaSpecific {
 	}
 	
 	public static String createPreparedStatementSetter(String javaType, int position, String javaName) {
+		//record.setRemiseClient( (Integer) rst.getObject(20));
 		String cast = "";
 		if (javaType.equals("Date")) {
 			javaType = "Timestamp";
