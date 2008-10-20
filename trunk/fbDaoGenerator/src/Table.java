@@ -3,6 +3,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Returns an Image object that can then be painted on the screen. 
+ * The url argument must specify an absolute {@link URL}. The name
+ * argument is a specifier that is relative to the url argument. 
+ * <p>
+ * This method always returns immediately, whether or not the 
+ * image exists. When this applet attempts to draw the image on
+ * the screen, the data will be loaded. The graphics primitives 
+ * that draw the image will incrementally paint on the screen. 
+ *
+ * @param  url  an absolute URL giving the base location of the image
+ * @param  name the location of the image, relative to the url argument
+ * @return      the image at the specified URL
+ * @see         Image
+ */
+
 public class Table {
 	private static Configuration config =  new Configuration();
 	
@@ -61,6 +77,7 @@ public class Table {
 			pstmt.setString(1, table);
 			ResultSet rst = pstmt.executeQuery();
 			while(rst.next()) {
+				//System.out.println(rst.getString("RDB$FIELD_NAME").trim()+": "+rst.getString("RDB$TYPE_NAME").trim());
 				insertStatementFieldsList = insertStatementFieldsList + rst.getString("RDB$FIELD_NAME").trim() + ",";
 				insertStatementPlaceHolders = insertStatementPlaceHolders + "?,";
 				updateStatementFieldsList = updateStatementFieldsList + rst.getString("RDB$FIELD_NAME").trim() + "=?,";

@@ -15,13 +15,35 @@ public class DataFieldFirebird {
 
 	public DataFieldFirebird(String name, String type, int length, int notNull) {
 		// HashMap which makes the link between data types of Firebird and Java
-		typeMapping.put("SHORT", "Integer");
+		
+		/*
+  
+		http://www.destructor.de/firebird/refdoc/600.htm
+		http://www.leepoint.net/notes-java/data/basic_types/21integers.html
+
+		SMALLINT        short, java.lang.Short
+		INTEGER         int, java.lang.Integer
+		BIGINT          long, java.lang.Long
+		FLOAT           double, java.lang.Double
+		DOUBLE          double, java.lang.Double
+		VARCHAR         java.lang.String
+		CHAR            java.lang.String
+		BLOB            java.io.InputStream
+		BLOB SUB_TYPE < 0       java.sql.Blob
+		TEXT            (either String or stream, do not remember)
+		DATE            java.sql.Date
+		TIME            java.sql.Time
+		TIMESTAMP       java.sql.Timestamp
+		*/
+		typeMapping.put("SMALLINT", "Integer"); // Short
+		typeMapping.put("SHORT", "Integer"); // Short
 		typeMapping.put("INT", "Integer");
 		typeMapping.put("INTEGER", "Integer");
-		typeMapping.put("INT64", "Integer");
-		typeMapping.put("LONG", "Integer");
+		typeMapping.put("INT64", "Long");
+		typeMapping.put("LONG", "Long");
+		typeMapping.put("BIGINT", "Long");
 		typeMapping.put("DOUBLE", "Double");
-		typeMapping.put("FLOAT", "Float");
+		typeMapping.put("FLOAT", "Double");
 		typeMapping.put("VARYING", "String");
 		typeMapping.put("TEXT", "String");
 		typeMapping.put("BLOB", "String");
