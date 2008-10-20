@@ -3,10 +3,10 @@ cd bin
 
 copy ..\fbdaogenerator.ini .
 
-rem set CLASSPATH=.;..\lib\jaybird-full-2.1.5.jar
+rem set CLASSPATH=.;..\lib\jaybird-full-2.1.6.jar
 rem java Main
 
-java -classpath .;..\lib\jaybird-full-2.1.5.jar Main
+java -classpath .;..\lib\jaybird-full-2.1.6.jar Main
 
 cd ..
 
