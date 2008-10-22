@@ -40,7 +40,7 @@ public class DataFieldFirebird {
 		typeMapping.put("INT", "Integer");
 		typeMapping.put("INTEGER", "Integer");
 		typeMapping.put("INT64", "Long");
-		typeMapping.put("LONG", "Long");
+		typeMapping.put("LONG", "Integer");
 		typeMapping.put("BIGINT", "Long");
 		typeMapping.put("DOUBLE", "Double");
 		typeMapping.put("FLOAT", "Double");
