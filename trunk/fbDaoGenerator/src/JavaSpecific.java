@@ -32,7 +32,7 @@ public class JavaSpecific {
 			cast = "(java.sql.Timestamp) ";
 		} else if (javaType.equals("Integer")) {
 			return "setObject("+position+", "+cast+javaName+");";
-		} else if (javaType.equals("Float")) {
+		} else if (javaType.equals("Long")) {
 			return "setObject("+position+", "+cast+javaName+");";
 		} else if (javaType.equals("Double")) {
 			return "setObject("+position+", "+cast+javaName+");";
@@ -50,12 +50,15 @@ public class JavaSpecific {
 		} else if (javaType.equals("Integer")) {
 			cast = " (Integer) ";
 			javaType = "Object";
-		} else if (javaType.equals("Float")) {
+		//} else if (javaType.equals("Float")) {
 			// uncommenting this made code for vpn2 database be ok again, since it removed an invalid cast from double to float 
 			//cast = " (Float) ";
 			//javaType = "Object";
 		} else if (javaType.equals("Double")) {
 			cast = " (Double) ";
+			javaType = "Object";
+		} else if (javaType.equals("Long")) {
+			cast = " (Long) ";
 			javaType = "Object";
 		} else {
 			javaType = javaType.substring(0,1).toUpperCase() + javaType.substring(1);
