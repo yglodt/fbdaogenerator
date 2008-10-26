@@ -1,7 +1,7 @@
 import java.sql.Date;
 
-import com.example.dao.*;
-import lu.sitasoftware.azur.dao.*;
+//import com.example.dao.*;
+//import lu.sitasoftware.azur.dao.*;
 
 public class Test {
 	public static void main(String[] args) {
