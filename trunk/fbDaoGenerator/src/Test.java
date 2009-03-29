@@ -56,16 +56,16 @@ public class Test {
 			e.printStackTrace();
 		}
 */
-		
+		/*
 		Configuration config =  new Configuration("atest.ini");
 		Connection conn = config.getDbConnection();
 		FBDatabaseMetaData db = null;
 		ResultSet rst = null;
 		ResultSet rst2 = null;
-		
+		*/
 		//FBResultSet catalog = (FBResultSet) db.getCatalogs();
 		
-		
+		/*
 		try {
 			db = (FBDatabaseMetaData) conn.getMetaData();
 			rst = db.getColumns(null, null, "ATEST", "%");
@@ -75,13 +75,13 @@ public class Test {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		*/
 		//String sql = "select first 1 * from atest";
-		try {
+	//	try {
 			//PreparedStatement pstmt = conn.prepareStatement(sql);
 			//pstmt.setString(1, table);
 			//ResultSet rst = pstmt.executeQuery();
-			while(rst.next()) {
+			//while(rst.next()) {
 				/*
 				 * table:
 				TABLE_CAT
@@ -118,6 +118,8 @@ public class Test {
 					System.out.println(rst.getString("COLUMN_DEF"));
 
 				 */
+				
+				/*
 				FBResultSetMetaData md = (FBResultSetMetaData) rst.getMetaData();
 				//System.out.println("count: "+md.getColumnCount());
 				
@@ -128,14 +130,14 @@ public class Test {
 					int nullable = 1;
 					System.out.println(i+": "+name+": "+rst.getString("TYPE_NAME"));
 				}
-			
-
+			*/
+/*
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-
+*/
 		String noDossier = "690";
 		//ArticleDAOFirebird dao = new ArticleDAOFirebird(config.getDbConnection());
 		//Article[] a = aDao.getAll("where NO_DOSSIER = "+Application.getConfigFileParameter("noDossier")+" and ACTIF_INTERVENTION = 'T' and ACTIF = 'T' and LIBELLE1 <> '' and LIBELLE1 is not NULL order by SIMPLE(LIBELLE1)"); //  TODO: $tempuserlimit
@@ -186,5 +188,6 @@ public class Test {
 		dao.update(t);
 */
 		
+	//}
 	}
 }

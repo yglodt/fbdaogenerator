@@ -1,7 +1,7 @@
 import java.io.*;
 import java.sql.*;
 import java.util.*;
- 
+
 class Configuration {
 	private Connection conn = null;
 	private Properties configFile = null;
