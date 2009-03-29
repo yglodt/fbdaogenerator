@@ -12,10 +12,18 @@ public class Main {
 
 		int generateJavaCode = Integer.parseInt(config.getConfigFileParameter("generateJavaCode"));
 		int generatePhpCode = Integer.parseInt(config.getConfigFileParameter("generatePhpCode"));
-
+		int generateOnlyHibernateAnnotatedPojos = Integer.parseInt(config.getConfigFileParameter("generateOnlyHibernateAnnotatedPojos"));
+		
 		for (String table : DataBase.getTableList()) {
-			if (generateJavaCode == 1) JavaSpecific.generateCode(table);
-			if (generatePhpCode == 1) PhpSpecific.generateCode(table);
+			if (generateJavaCode == 1) {
+				JavaSpecific.generateCode(table, 0);
+			}
+			if (generateOnlyHibernateAnnotatedPojos == 1 ) {
+				JavaSpecific.generateCode(table, 1);
+			}
+			if (generatePhpCode == 1) {
+				PhpSpecific.generateCode(table);
+			}
 		}
 
 		if (generateJavaCode == 1) {
