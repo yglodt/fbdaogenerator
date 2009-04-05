@@ -12,9 +12,10 @@ public class Table {
 	private String insertStatementPlaceHolders;
 	private String updateStatementFieldsList;
 	private String pkWhereStatement;
+	private int numberOfPkFields;
 
 	public Table() {
-		super();
+		numberOfPkFields = 0;
 	}
 
 	public ArrayList<DataFieldFirebird> getColumList(String table) {
@@ -41,6 +42,7 @@ public class Table {
 			ResultSet rst = pstmt.executeQuery();
 			while(rst.next()) {
 				pkFields.add(rst.getString(1).trim());
+				numberOfPkFields++;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -172,5 +174,9 @@ public class Table {
 
 	private void setPkWhereStatement(String pkWhereStatement) {
 		this.pkWhereStatement = pkWhereStatement;
+	}
+
+	public int getNumberOfPkFields() {
+		return numberOfPkFields;
 	}
 }

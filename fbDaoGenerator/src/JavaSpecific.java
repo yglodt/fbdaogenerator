@@ -1,10 +1,14 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
- 
+
 public class JavaSpecific {
 
 	public static String replaceKeyWords(String keyword) {
@@ -72,32 +76,30 @@ public class JavaSpecific {
 		new File(outPutDir).mkdirs();
 		ArrayList<String> sourceFilesToCompile = new ArrayList<String>();
 
-		System.out.println("Generating Java code for table: " + table);
 		ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
-		PrintStream classFile;
-		PrintStream hibernateClassFile;
-		PrintStream daoFile;
-		PrintStream daoImpFile;
-		FileOutputStream classFileHandle = null;
-		FileOutputStream hibernateClassFileHandle = null;
-		FileOutputStream daoFileHandle = null;
-		FileOutputStream daoImpFileHandle = null;
-		String classFileBuffer = "";
+		/*String classFileBuffer = "";
 		String hibernateClassFileBuffer = "";
 		String daoFileBuffer = "";
-		String daoImpFileBuffer = "";
+		String daoImpFileBuffer = "";*/
 		String tableJavaName = Helpers.underscoreSeparatedToCamelCase(table);
 		tableJavaName = tableJavaName.substring(0, 1).toUpperCase() + tableJavaName.substring(1);
 
 		Table t = new Table();
 		columnList = t.getColumList(table);
-		String insertStatementFieldsList = t.getInsertStatementFieldsList();
+		/*String insertStatementFieldsList = t.getInsertStatementFieldsList();
 		String insertStatementPlaceHolders = t.getInsertStatementPlaceHolders();
 		String updateStatementFieldsList = t.getUpdateStatementFieldsList();
-		String pkWhereStatement = t.getPkWhereStatement();
+		String pkWhereStatement = t.getPkWhereStatement();*/
 
 		
 		if (type == 0) {
+			System.out.println("Generating Java code for table " + table);
+			PrintStream classFile;
+			PrintStream daoFile;
+			PrintStream daoImpFile;
+			FileOutputStream classFileHandle = null;
+			FileOutputStream daoFileHandle = null;
+			FileOutputStream daoImpFileHandle = null;
 			try {
 				classFileHandle = new FileOutputStream(outPutDir + tableJavaName + ".java");
 				daoFileHandle = new FileOutputStream(outPutDir + tableJavaName + "DAO.java");
@@ -476,50 +478,217 @@ public class JavaSpecific {
 		
 		// generateOnlyHibernateAnnotatedPojos
 		if (type == 1) {
+			System.out.println("Generating Hibernate-annotated POJO for table " + table);
+			FileOutputStream cfh = null;
+			PrintStream cf;
 			try {
-				hibernateClassFileHandle = new FileOutputStream(outPutDir + tableJavaName + ".java");
+				cfh = new FileOutputStream(outPutDir + tableJavaName + ".java");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 
 			// create java class with getters and setters
-			hibernateClassFile = new PrintStream(hibernateClassFileHandle);
-			hibernateClassFile.println("package " + Main.config.getConfigFileParameter("javaPackage") + ";");
-			hibernateClassFile.println();
-			hibernateClassFile.println("import java.util.Date;");
+			cf = new PrintStream(cfh);
+			cf.println("package " + Main.config.getConfigFileParameter("javaPackage") + ";");
+			cf.println();
+			cf.println("import java.io.Serializable;");
+			cf.println("import javax.persistence.Column;");
+			cf.println("import javax.persistence.Entity;");
+			cf.println("import javax.persistence.Id;");
+			cf.println("import javax.persistence.Table;");
+			cf.println("import java.util.Date;");
+			/*hibernateClassFile.println("import java.util.Date;");
 			hibernateClassFile.println("import java.io.Serializable;");
 			hibernateClassFile.println("import javax.persistence.Column;");
 			hibernateClassFile.println("import javax.persistence.Entity;");
 			hibernateClassFile.println("import javax.persistence.Id;");
 			hibernateClassFile.println("import javax.persistence.Table;");
-			hibernateClassFile.println("import org.hibernate.annotations.GenericGenerator;");
+			hibernateClassFile.println("import org.hibernate.annotations.GenericGenerator;");*/
 
-			hibernateClassFile.println();
-			hibernateClassFile.println("@Entity");
-			hibernateClassFile.println("@Table(name = \""+table+"\")");
-			hibernateClassFile.println("public class " + tableJavaName + " {");
+			cf.println();
+			cf.println("@Entity");
+			cf.println("@Table(name = \""+table+"\")");
+			cf.println("public class " + tableJavaName + " implements Serializable {");
+			cf.println("\tprivate static final long serialVersionUID = 1L;");
+
 
 			for (DataFieldFirebird column : columnList) {
-				hibernateClassFile.println();
+				cf.println();
+				String isNullable = "";
 				if (column.isInPK()) {
-					hibernateClassFile.println("\t@Id");				
+					cf.println("\t@Id");
+					isNullable = ", nullable = false";
 				}
-				hibernateClassFile.println("\t@Column(name = \""+column.getName()+"\")");
-				hibernateClassFile.println("\tprivate " + column.getJavaType() + " "+ column.getJavaName() + ";");
+				cf.println("\t@Column(name = \""+column.getName()+"\""+isNullable+")");
+				cf.println("\tprivate " + column.getJavaType() + " "+ column.getJavaName() + ";");
 			}
 			
 			for (DataFieldFirebird column : columnList) {
-				hibernateClassFile.println();
-				hibernateClassFile.println("\tpublic " + column.getJavaType() + column.getJavaGetter() + " {");
-				hibernateClassFile.println("\t\treturn " + column.getJavaName() + ";");
-				hibernateClassFile.println("\t}");
-				hibernateClassFile.println();
-				hibernateClassFile.println("\tpublic void" + column.getJavaSetter() + " {");
-				hibernateClassFile.println("\t\tthis." + column.getJavaName() + " = "+ column.getJavaName() + ";");
-				hibernateClassFile.println("\t}");
+				cf.println();
+				cf.println("\tpublic " + column.getJavaType() + column.getJavaGetter() + " {");
+				cf.println("\t\treturn " + column.getJavaName() + ";");
+				cf.println("\t}");
+				cf.println();
+				cf.println("\tpublic void" + column.getJavaSetter() + " {");
+				cf.println("\t\tthis." + column.getJavaName() + " = "+ column.getJavaName() + ";");
+				cf.println("\t}");
 			}
-			hibernateClassFile.println("}");
-			hibernateClassFile.close();
+			cf.println("}");
+			cf.close();
+			
+			// create dedicated class with the primary key object
+			//if (t.getNumberOfPkFields() > 1) {
+				PrintStream pkf;
+				FileOutputStream pkfh = null;
+				try {
+					pkfh = new FileOutputStream(outPutDir + tableJavaName + "PK.java");
+				} catch (IOException e) {
+					
+				}
+				pkf = new PrintStream(pkfh);
+				pkf.println("package " + Main.config.getConfigFileParameter("javaPackage") + ";");
+				pkf.println();
+				pkf.println("import java.util.Date;");
+				pkf.println("import java.io.Serializable;");
+				pkf.println();
+				pkf.println("public class " + tableJavaName + "PK implements Serializable {");
+				pkf.println("\tprivate static final long serialVersionUID = 1L;");
+			    for (DataFieldFirebird column : columnList) {
+			    	if (column.isInPK()) {
+				    	pkf.println("\tprivate " + column.getJavaType() + " " + column.getJavaName() + ";");
+			    	}
+			    }
+
+		    	pkf.println();
+				pkf.println("\tpublic " + tableJavaName + "PK() {");
+		    	pkf.println("\t}");
+
+				String getterParams = "";
+				for (DataFieldFirebird column : columnList) {
+					if (column.isInPK()) {
+							getterParams = getterParams + column.getJavaType() + " "
+								+ column.getJavaName() + ", ";
+					}
+				}
+				if (!getterParams.equals("")) {
+					getterParams = getterParams.substring(0,
+							(getterParams.length() - 2));
+				}
+
+		    	pkf.println();
+				pkf.println("\tpublic " + tableJavaName + "PK("+getterParams+") {");
+				for (DataFieldFirebird column : columnList) {
+					if (column.isInPK()) {
+						pkf.println("\t\tthis." + column.getJavaName() + " = "+ column.getJavaName() + ";");						}
+				}
+		    	pkf.println("\t}");
+
+			    /*
+				public ContentPK() {
+				}
+
+				public ContentPK(String id, Integer version) {
+			        this.id = id;
+			        this.version = version;
+				}
+				*/
+
+			    
+			    for (DataFieldFirebird column : columnList) {
+			    	if (column.isInPK()) {
+				    	pkf.println();
+				    	pkf.println("\tpublic " + column.getJavaType() + column.getJavaGetter() + " {");
+				    	pkf.println("\t\treturn " + column.getJavaName() + ";");
+				    	pkf.println("\t}");
+				    	pkf.println();
+				    	pkf.println("\tpublic void" + column.getJavaSetter() + " {");
+				    	pkf.println("\t\tthis." + column.getJavaName() + " = " + column.getJavaName() + ";");
+				    	pkf.println("\t}");
+			    	}
+			    }
+			    pkf.println("}");
+			    pkf.close();
+			//}
+		}
+		
+		
+		// generateWebServiceInterfaceToHibernateAnnotatedPojos
+		if (type == 2) {
+			System.out.println("Generating Web-Service interface for table " + table);
+			BufferedWriter f = null;
+		    boolean exists = (new File("/tmp/WebServiceInterface.java")).exists();
+		    if (exists) {
+		        // File or directory exists
+		    } else {
+				try {
+					f = new BufferedWriter(new FileWriter("/tmp/WebServiceInterface.java", false));
+					f.write("\n");
+					f.close();
+				} catch (IOException e) {
+					
+				}
+		    }
+
+			/*
+			FileOutputStream webServiceInterfaceFileHandle = null;
+			//PrintStream f;
+			
+			try {
+				webServiceInterfaceFileHandle = new FileOutputStream(outPutDir + "WebServiceInterface.java");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+*/
+
+			String getterParams = "";
+			String varList = "";
+			for (DataFieldFirebird column : columnList) {
+				if (column.isInPK()) {
+					getterParams = getterParams + column.getJavaType() + " "+ column.getJavaName() + ", ";
+					varList = varList + column.getJavaName() + ", ";
+				}
+			}
+			if (!getterParams.equals("")) {
+				getterParams = getterParams.substring(0,(getterParams.length() - 2));
+				varList = varList.substring(0,(varList.length() - 2));
+			}
+
+			try {
+			f = new BufferedWriter(new FileWriter("/tmp/WebServiceInterface.java", true));
+			f.write("\tpublic static "+tableJavaName+" get"+tableJavaName+"("+getterParams+") {\n");
+			f.write("\t\tSession session = HibernateUtil.getSession();\n");
+			f.write("\t\t"+tableJavaName+" o = new "+tableJavaName+"();\n");
+
+			/*
+			f.write("\t\tpk.set");
+			f.write(column.getJavaName().substring(0,1).toUpperCase()+column.getJavaName().substring(1));
+			f.write("("+column.getJavaName()+");\n");
+
+			 */
+
+			f.write("\t\t"+tableJavaName+"PK pk = new "+tableJavaName+"PK("+varList+");\n");
+			f.write("\t\to = ("+tableJavaName+") session.load("+tableJavaName+".class, pk);\n");
+			f.write("\t\treturn o;\n");
+			f.write("\t}\n");
+			f.write("\n");
+
+			f.write("\tpublic static void save"+tableJavaName+"("+tableJavaName+" o) {\n");
+			f.write("\t\tSession session = HibernateUtil.getSession();\n");
+			f.write("\t\tTransaction tx = session.beginTransaction();\n");
+			f.write("\t\tsession.save(o);\n");
+			f.write("\t\ttx.commit();\n");
+			f.write("\t}\n");
+			f.write("\n");
+			
+/*			
+			f.write("\tpublic static void saveOrUpdate"+tableJavaName+"("+tableJavaName+" o) {\n");
+			f.write("\tpublic static void update"+tableJavaName+"("+tableJavaName+" o) {\n");
+			f.write("\tpublic static void delete"+tableJavaName+"("+tableJavaName+" o) {\n");
+*/
+
+			f.close();
+			} catch (IOException e) {
+			}
 		}
 	}
 }

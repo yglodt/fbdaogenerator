@@ -23,7 +23,7 @@ public class PhpSpecific {
 
 //		String schemaVersion = DataBase.getSchemaVersion();
 
-		System.out.println("Generating PHP code for table: " + table);
+		System.out.println("Generating PHP code for table " + table);
 		ArrayList<DataFieldFirebird> columnList = new ArrayList<DataFieldFirebird>();
 		PrintStream phpFile;
 		FileOutputStream fileHandle = null;

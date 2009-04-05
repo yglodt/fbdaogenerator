@@ -13,14 +13,21 @@ public class Main {
 		int generateJavaCode = Integer.parseInt(config.getConfigFileParameter("generateJavaCode"));
 		int generatePhpCode = Integer.parseInt(config.getConfigFileParameter("generatePhpCode"));
 		int generateOnlyHibernateAnnotatedPojos = Integer.parseInt(config.getConfigFileParameter("generateOnlyHibernateAnnotatedPojos"));
+		int generateWebServiceInterfaceToHibernateAnnotatedPojos = Integer.parseInt(config.getConfigFileParameter("generateWebServiceInterfaceToHibernateAnnotatedPojos"));
 		
 		for (String table : DataBase.getTableList()) {
 			if (generateJavaCode == 1) {
 				JavaSpecific.generateCode(table, 0);
 			}
+			
 			if (generateOnlyHibernateAnnotatedPojos == 1 ) {
 				JavaSpecific.generateCode(table, 1);
 			}
+			
+			if (generateWebServiceInterfaceToHibernateAnnotatedPojos == 1 ) {
+				JavaSpecific.generateCode(table, 2);
+			}
+			
 			if (generatePhpCode == 1) {
 				PhpSpecific.generateCode(table);
 			}
