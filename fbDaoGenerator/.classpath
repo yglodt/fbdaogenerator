@@ -3,7 +3,7 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
-	<classpathentry kind="lib" path="/usr/lib/jvm/java-6-sun/lib/tools.jar"/>
 	<classpathentry kind="lib" path="lib/jaybird-full-2.1.6.jar"/>
+	<classpathentry kind="lib" path="/usr/lib/jvm/java-1.5.0-sun/lib/tools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

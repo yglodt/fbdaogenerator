@@ -507,6 +507,7 @@ public class JavaSpecific {
 
 			cf.println();
 			cf.println("@Entity");
+			cf.println("@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)");
 			cf.println("@Table(name = \""+table+"\")");
 			cf.println("public class " + tableJavaName + " implements Serializable {");
 			cf.println("\tprivate static final long serialVersionUID = 1L;");
@@ -537,7 +538,7 @@ public class JavaSpecific {
 			cf.close();
 			
 			// create dedicated class with the primary key object
-			//if (t.getNumberOfPkFields() > 1) {
+			if (t.getNumberOfPkFields() > 1) {
 				PrintStream pkf;
 				FileOutputStream pkfh = null;
 				try {
@@ -608,7 +609,7 @@ public class JavaSpecific {
 			    }
 			    pkf.println("}");
 			    pkf.close();
-			//}
+			}
 		}
 		
 		
