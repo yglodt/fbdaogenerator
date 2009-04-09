@@ -12,6 +12,8 @@ create table table_test (
 
 = Usage example =
 
+With the fbdaogenerator-generated PHP class you can work with the above table as easy as shown here:
+
 {{{
 <?php
 
