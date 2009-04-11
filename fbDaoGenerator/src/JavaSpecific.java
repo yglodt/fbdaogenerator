@@ -103,12 +103,10 @@ public class JavaSpecific {
 			FileOutputStream daoImpFileHandle = null;
 			try {
 				classFileHandle = new FileOutputStream(outPutDir + tableJavaName + ".java");
-				//daoFileHandle = new FileOutputStream(outPutDir + tableJavaName + "DAO.java");
 				//daoImpFileHandle = new FileOutputStream(outPutDir + tableJavaName + "DAOFirebird.java");
 				daoImpFileHandle = new FileOutputStream(outPutDir + tableJavaName + "DAO.java");
 				sourceFilesToCompile.add(outPutDir + tableJavaName + ".java");
 				sourceFilesToCompile.add(outPutDir + tableJavaName + "DAO.java");
-				sourceFilesToCompile.add(outPutDir + tableJavaName + "DAOFirebird.java");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -194,8 +192,8 @@ public class JavaSpecific {
 			daoImpFile.println("public class " + tableJavaName + "DAO {");
 			daoImpFile.println("\tprivate Connection conn = null;");
 			daoImpFile.println();
-			daoImpFile.println("\tpublic " + tableJavaName
-					+ "DAOFirebird(Connection conn) {");
+			//daoImpFile.println("\tpublic " + tableJavaName+ "DAOFirebird(Connection conn) {");
+			daoImpFile.println("\tpublic " + tableJavaName+ "DAO(Connection conn) {");
 			daoImpFile.println("\t\tthis.conn = conn;");
 			daoImpFile.println("\t}");
 			daoImpFile.println();
@@ -512,6 +510,9 @@ public class JavaSpecific {
 			cf.println("@Entity");
 			cf.println("@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)");
 			cf.println("@Table(name = \""+table+"\")");
+			if (t.getNumberOfPkFields() > 1) {
+				cf.println("@IdClass(\""+tableJavaName+"PK.class\")");				
+			}
 			cf.println("public class " + tableJavaName + " implements Serializable {");
 			cf.println("\tprivate static final long serialVersionUID = 1L;");
 
