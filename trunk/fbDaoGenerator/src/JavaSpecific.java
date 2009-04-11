@@ -496,6 +496,7 @@ public class JavaSpecific {
 			cf.println("import javax.persistence.Column;");
 			cf.println("import javax.persistence.Entity;");
 			cf.println("import javax.persistence.Id;");
+			cf.println("import javax.persistence.IdClass;");
 			cf.println("import javax.persistence.Table;");
 			cf.println("import java.util.Date;");
 			/*hibernateClassFile.println("import java.util.Date;");
@@ -511,7 +512,7 @@ public class JavaSpecific {
 			cf.println("@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)");
 			cf.println("@Table(name = \""+table+"\")");
 			if (t.getNumberOfPkFields() > 1) {
-				cf.println("@IdClass(\""+tableJavaName+"PK.class\")");				
+				cf.println("@IdClass("+tableJavaName+"PK.class)");				
 			}
 			cf.println("public class " + tableJavaName + " implements Serializable {");
 			cf.println("\tprivate static final long serialVersionUID = 1L;");
