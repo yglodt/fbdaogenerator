@@ -499,13 +499,6 @@ public class JavaSpecific {
 			cf.println("import javax.persistence.IdClass;");
 			cf.println("import javax.persistence.Table;");
 			cf.println("import java.util.Date;");
-			/*hibernateClassFile.println("import java.util.Date;");
-			hibernateClassFile.println("import java.io.Serializable;");
-			hibernateClassFile.println("import javax.persistence.Column;");
-			hibernateClassFile.println("import javax.persistence.Entity;");
-			hibernateClassFile.println("import javax.persistence.Id;");
-			hibernateClassFile.println("import javax.persistence.Table;");
-			hibernateClassFile.println("import org.hibernate.annotations.GenericGenerator;");*/
 
 			cf.println();
 			cf.println("@Entity");
@@ -525,6 +518,7 @@ public class JavaSpecific {
 					cf.println("\t@Id");
 					isNullable = ", nullable = false";
 				}
+
 				cf.println("\t@Column(name = \""+column.getName()+"\""+isNullable+")");
 				cf.println("\tprivate " + column.getJavaType() + " "+ column.getJavaName() + ";");
 			}
@@ -589,17 +583,6 @@ public class JavaSpecific {
 				}
 		    	pkf.println("\t}");
 
-			    /*
-				public ContentPK() {
-				}
-
-				public ContentPK(String id, Integer version) {
-			        this.id = id;
-			        this.version = version;
-				}
-				*/
-
-			    
 			    for (DataFieldFirebird column : columnList) {
 			    	if (column.isInPK()) {
 				    	pkf.println();
