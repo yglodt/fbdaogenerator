@@ -1,0 +1,224 @@
+# Example Database Table #
+
+See the following table structure:
+```
+create table table_test (
+  id integer not null primary key,
+  string_field varchar(16)
+);
+```
+
+# Resulting Java code #
+
+This is the Java code that fbdaogenerator will create out of it. There will be 3 files in total.
+
+TableTest.java
+
+```
+package com.example.dao;
+
+import java.util.Date;
+
+public class TableTest {
+
+	private Integer id;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	private String stringField;
+	public String getStringField() {
+		return stringField;
+	}
+
+	public void setStringField(String stringField) {
+		this.stringField = stringField;
+	}
+}
+```
+
+TableTestDAO.java
+
+```
+package com.example.dao;
+
+import java.util.Date;
+
+public interface TableTestDAO {
+
+	public TableTest get(Integer id);
+
+	public TableTest[] getAll();
+
+	public TableTest[] getAll(String clause);
+
+	public void insert(TableTest record);
+
+	public void update(TableTest record);
+
+	public void delete(TableTest record);
+}
+```
+
+TableTestDAOFirebird.java
+
+```
+package com.example.dao;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Date;
+
+public class TableTestDAOFirebird implements TableTestDAO {
+	private Connection conn = null;
+
+	public TableTestDAOFirebird(Connection conn) {
+		this.conn = conn;
+	}
+
+	public TableTest get(Integer id) {
+		ResultSet rst = null;
+		PreparedStatement pstmt = null;
+		String sql = "select ID,STRING_FIELD from TABLE_TEST where "+
+		"ID = ?";
+		TableTest record = new TableTest();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setObject(1, id);
+			rst = pstmt.executeQuery();
+			while(rst.next()) {
+				record.setId( (Integer) rst.getObject(1));
+				record.setStringField(rst.getString(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return record;
+	}
+
+	public TableTest[] getAll() {
+		ArrayList<TableTest> list = new ArrayList<TableTest>();
+		ResultSet rst = null;
+		PreparedStatement pstmt = null;
+		String sql = "select ID,STRING_FIELD from TABLE_TEST";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rst = pstmt.executeQuery();
+			while(rst.next()) {
+				TableTest record = new TableTest();
+				record.setId( (Integer) rst.getObject(1));
+				record.setStringField(rst.getString(2));
+				list.add(record);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list.toArray(new TableTest[0]);
+	}
+
+	public TableTest[] getAll(String clause) {
+		ArrayList<TableTest> list = new ArrayList<TableTest>();
+		ResultSet rst = null;
+		PreparedStatement pstmt = null;
+		String sql = "select ID,STRING_FIELD from TABLE_TEST " + clause;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rst = pstmt.executeQuery();
+			while(rst.next()) {
+				TableTest record = new TableTest();
+				record.setId( (Integer) rst.getObject(1));
+				record.setStringField(rst.getString(2));
+				list.add(record);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list.toArray(new TableTest[0]);
+	}
+
+	public void insert(TableTest record) {
+		PreparedStatement pstmt = null;
+		String stmt = "insert into TABLE_TEST "+
+		"(ID, STRING_FIELD) "+ 
+		"values (?, ?)";
+		try {
+			pstmt = conn.prepareStatement(stmt);
+			pstmt.setObject(1, record.getId());
+			pstmt.setString(2, record.getStringField());
+			int result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void update(TableTest record) {
+		PreparedStatement pstmt = null;
+		String stmt = "update TABLE_TEST set "+
+		"ID = ?, STRING_FIELD = ? where "+
+		"ID = ?";
+		try {
+			pstmt = conn.prepareStatement(stmt);
+			pstmt.setObject(1, record.getId());
+			pstmt.setString(2, record.getStringField());
+			pstmt.setObject(3, record.getId());
+			int result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void delete(TableTest record) {
+		PreparedStatement pstmt = null;
+		String stmt = "delete from TABLE_TEST where "+
+		"ID = ?";
+		try {
+			pstmt = conn.prepareStatement(stmt);
+			pstmt.setObject(1, record.getId());
+			int result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
+```
+
+# Usage example #
+
+```
+import java.sql.*;
+import java.util.*;
+import com.example.dao.*;
+
+Connection conn = null;
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Properties connInfo = new Properties();
+connInfo.put("user", "SYSDBA");
+connInfo.put("password", "masterkey");
+connInfo.put("charSet", "ISO-8859-1");
+
+// Create a database connection
+conn = DriverManager.getConnection("jdbc:firebirdsql:server:alias", connInfo);
+
+// Create an instance of the data-access object
+TableTestDAOFirebird dao = new TableTestDAOFirebird(conn);
+		
+// Use the get() method to fetch a record
+// The resulting variable t is an instance of the TableTest object
+TableTest t = dao.get(1);
+
+// Print out the string_field column
+System.out.println(t.getId());
+
+// Update the string field with a new value
+t.setStringField("new value");
+
+// Save the modified object back to the database
+dao.update(t);
+
+```

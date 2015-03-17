@@ -1,0 +1,157 @@
+# Example Database Table #
+
+See the following table structure:
+```
+create table table_test (
+  id integer not null primary key,
+  string_field varchar(16)
+);
+```
+
+# Usage example #
+
+With the fbdaogenerator-generated PHP class you can work with the above table as easy as shown here:
+
+```
+<?php
+
+include("TableTest.php");
+
+// Create a database connection
+$conn = ibase_connect('server:alias', 'SYSDBA', 'masterkey');
+
+// Create an instance of the data-access object
+$dao = new TableTestDAO($conn);
+
+// Use the get() method to fetch a record
+// The resulting variable $t is an instance of the TableTest object
+$t = $dao->get(1);
+
+// Print out the string_field column
+print $t->getStringField();
+
+// Update the string field with a new value
+$t->setStringField("new data");
+
+// Save the modified object back to the database
+$dao->update($t);
+
+?>
+```
+
+# Generated PHP code #
+
+This is the PHP code that fbdaogenerator will create automatically from the table shown above. You do not need to worry about this code since it is generated automatically. It is just shown here for information.
+
+TableTest.php:
+
+```
+<?php
+
+class TableTest {
+	// Primary Key Field(s): ID
+	private $id;
+	private $stringField;
+
+	function __construct() {}
+	function __destruct() {}
+
+	public function getId() { return $this->id; }
+	public function setId($id) { $this->id = $id; }
+	public function getStringField() { return $this->stringField; }
+	public function setStringField($stringField) { $this->stringField = $stringField; }
+}
+
+class TableTestDAO {
+	private $conn;
+	private $trans;
+
+	public function __construct($conn) {
+		$this->setConn($conn);
+		$this->trans = ibase_trans($conn);
+	}
+
+	public function __destruct() {
+	}
+
+	private function getConn() {
+		return $this->conn;
+	}
+
+	private function setConn($conn) {
+		$this->conn = $conn;
+	}
+
+	private function fillObject($sth, $returnArray = true) {
+		while ($row = ibase_fetch_row($sth, IBASE_FETCH_BLOBS)) {
+			$temp = new TableTest();
+			$temp->setId($row[0]);
+			$temp->setStringField($row[1]);
+			$tempArray[] = $temp;
+		}
+		return ($returnArray == true) ? $tempArray : $tempArray[0];
+	}
+
+	public function get($id) {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST where ID=?';
+		$sth = ibase_query($this->getConn(), $query, $id);
+		return $this->fillObject($sth, $returnArray = false);
+	}
+
+	public function getAll() {
+		$query = 'select ID,STRING_FIELD from TABLE_TEST';
+		$sth = ibase_query($this->getConn(), $query);
+		return $this->fillObject($sth);
+	}
+
+	public function getAllWithClause($clause) {
+		$parameters = func_get_args();
+		$clause = array_shift($parameters);
+		$query = 'select ID,STRING_FIELD from TABLE_TEST '.$clause;
+		$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));
+		return $this->fillObject($sth);
+	}
+
+	public function getAllWithClauseAndLimit($from, $to, $clause) {
+		$parameters = func_get_args();
+		$from = array_shift($parameters);
+		$to = array_shift($parameters);
+		$clause = array_shift($parameters);
+		$firstSkip = ' first '.(($to + 1) - $from).' skip '.($from - 1);
+		$query = 'select'."$firstSkip".' ID,STRING_FIELD from TABLE_TEST '.$clause;
+		$sth = call_user_func_array('ibase_query', array_merge(array($this->getConn(), $query), $parameters));
+		return $this->fillObject($sth);
+	}
+
+	public function insert($o) {
+		$stmt = 'insert into TABLE_TEST (ID,STRING_FIELD) values (?,?)';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId(), $o->getStringField());
+		return $result;
+	}
+
+	public function update($o) {
+		$stmt = 'update TABLE_TEST set ID=?,STRING_FIELD=? where ID=?';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId(), $o->getStringField(), $o->getId());
+		return $result;
+	}
+
+	public function delete($o) {
+		$stmt = 'delete from TABLE_TEST where ID=?';
+		$sth = ibase_prepare($this->getConn(), $stmt);
+		$result = ibase_execute($sth, $o->getId());
+		return $result;
+	}
+
+	public function commit() {
+		return ibase_commit($this->trans);
+	}
+
+	public function rollback() {
+		return ibase_rollback($this->trans);
+	}
+}
+
+?>
+```
